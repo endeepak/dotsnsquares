@@ -7,42 +7,46 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class BoardView extends View implements View.OnTouchListener{
-    private Path currentPath;
-    private Point currentStartingDot;
+    private LineDrawing lineDrawing = new LineDrawing();
     private final int boardSize = 5;
     private final int numberOfDotRows = boardSize + 1;
     private final int numberOfDotColumns = boardSize + 1;
     private final int lineThickness = 10;
     private final int dotRadius = lineThickness;
     private final int dotDiameter = 2 * dotRadius;
-    private final int lineSize = 70;
+    private final int lineSize = 50;
     private final Point[][] dots = new Point[numberOfDotRows][numberOfDotColumns];
-
-    public BoardView(Context context) {
-        super(context);
-        initialiseDots();
-    }
+    private final Path completedLinesPath = new Path();
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialiseDots();
+        initialise();
     }
 
-    public BoardView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    private void initialise() {
         initialiseDots();
+        this.setOnTouchListener(this);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        this.setOnTouchListener(this);
         drawDots(canvas);
         drawCurrentPath(canvas);
+        if(lineDrawing.isCompleted()) {
+            completedLinesPath.moveTo(lineDrawing.getStartingDot().x, lineDrawing.getStartingDot().y);
+            completedLinesPath.lineTo(lineDrawing.getEndDot().x, lineDrawing.getEndDot().y);
+            Log.i("onDraw", "Resetting line Drawing" + "Completed " + lineDrawing.isCompleted() + " end point " + lineDrawing.getEndDot());
+            lineDrawing.reset();
+        }
+        canvas.drawPath(completedLinesPath, getLinePaint());
     }
 
     @Override
@@ -52,55 +56,78 @@ public class BoardView extends View implements View.OnTouchListener{
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(currentPath == null){
-                    currentPath = new Path();
-                }
-                currentStartingDot = getStartingDot(x, y);
-                if(currentStartingDot != null) {
-                    currentPath.moveTo(currentStartingDot.x, currentStartingDot.y);
-                }
+                lineDrawing.startFrom(getDotForCoordinates(x, y));
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(currentStartingDot != null) {
-                    currentPath.lineTo(x, y);
+                if(lineDrawing.isStarted()) {
+                    Point currentPoint = getPointBasedOnDirection(x, y);
+                    lineDrawing.moveTo(currentPoint);
                     invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                if(currentStartingDot != null) {
-                    currentPath.lineTo(x, y);
+                if(lineDrawing.isStarted()) {
+                    lineDrawing.reset();
                     invalidate();
-                    currentStartingDot = null;
                 }
                 break;
         }
         return true;
     }
 
-    private Point getStartingDot(float x, float y) {
-        int dotRowNumber;
-        int dotColumnNumber;
-        float yModulus = y % lineSize;
-        float xModulus = x % lineSize;
-        if(yModulus <= dotDiameter) dotRowNumber = (int) Math.floor(y / lineSize);
-        else if(yModulus >= lineSize - dotRadius) dotRowNumber = (int) Math.ceil(y / lineSize);
-        else return null;
+    private Point getPointBasedOnDirection(float x, float y) {
+        TouchSwipe touchSwipe = TouchSwipe.create(lineDrawing.getStartingDot(), new Point((int) x, (int) y));
+        float xBasedOnDirection;
+        float yBasedOnDirection;
+        if(touchSwipe.isHorizontal()){
+            xBasedOnDirection = x;
+            yBasedOnDirection = lineDrawing.getStartingDot().y;
+        } else if(touchSwipe.isVertical()) {
+            xBasedOnDirection = lineDrawing.getStartingDot().x;
+            yBasedOnDirection = y;
+        } else {
+            xBasedOnDirection = x;
+            yBasedOnDirection = y;
+        }
+        return new Point((int) xBasedOnDirection, (int) yBasedOnDirection);
+    }
 
-        if(xModulus <= dotDiameter) dotColumnNumber = (int) Math.floor(x / lineSize);
-        else if(xModulus >= lineSize - dotRadius) dotColumnNumber = (int) Math.ceil(x / lineSize);
-        else return null;
+    private Point getDotForCoordinates(float x, float y) {
+        int dotRowNumber = getRowOrColumnBasedOnPositionOnAxis(y);
+        if(dotRowNumber == -1) return null;
+
+        int dotColumnNumber = getRowOrColumnBasedOnPositionOnAxis(x);
+        if(dotColumnNumber == -1) return null;
 
         return dotRowNumber < numberOfDotRows && dotColumnNumber < numberOfDotColumns ? dots[dotRowNumber][dotColumnNumber] : null ;
     }
 
+    private int getRowOrColumnBasedOnPositionOnAxis(float position) {
+        float modulus = position % lineSize;
+        if(modulus <= dotDiameter) return (int) Math.floor(position / lineSize);
+        else if(modulus >= lineSize - dotRadius) return  (int) Math.ceil(position / lineSize);
+        else return  -1;
+    }
+
     private void drawCurrentPath(Canvas canvas) {
-        if(currentPath == null) return;
+        if(!lineDrawing.isStarted()) return;
+        Log.i("drawCurrentPath", "Drawing " + lineDrawing.getStartingDot() + " to "+ lineDrawing.getCurrentPoint());
+        Log.i("drawCurrentPath", "Completed " + lineDrawing.isCompleted() + " end point " + lineDrawing.getEndDot());
+        Paint paint = getLinePaint();
+        Path currentPath = new Path();
+        currentPath.moveTo(lineDrawing.getStartingDot().x, lineDrawing.getStartingDot().y);
+        currentPath.lineTo(lineDrawing.getCurrentPoint().x, lineDrawing.getCurrentPoint().y);
+        currentPath.setFillType(Path.FillType.INVERSE_WINDING);
+        canvas.drawPath(currentPath, paint);
+        lineDrawing.endAt(getDotForCoordinates(lineDrawing.getCurrentPoint().x, lineDrawing.getCurrentPoint().y));
+    }
+
+    private Paint getLinePaint() {
         Paint paint = new Paint();
         paint.setColor(Color.BLUE);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(lineThickness);
-        currentPath.setFillType(Path.FillType.INVERSE_WINDING);
-        canvas.drawPath(currentPath, paint);
+        return paint;
     }
 
     private void initialiseDots() {
