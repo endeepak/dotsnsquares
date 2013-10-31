@@ -3,13 +3,13 @@ package com.example.dotnsquares;
 import android.graphics.Point;
 
 public class LineDrawing {
-    private Point startingDot;
-    private Point endDot;
+    private Dot startingDot;
+    private Dot endDot;
     private Point currentPoint;
 
-    public void startFrom(Point startingDot) {
+    public void startFrom(Dot startingDot) {
         this.startingDot = startingDot;
-        this.currentPoint = startingDot;
+        this.currentPoint = startingDot == null ? null : startingDot.getPoint();
     }
 
     public boolean isCompleted() {
@@ -20,7 +20,7 @@ public class LineDrawing {
         this.currentPoint = currentPoint;
     }
 
-    public void endAt(Point endDot) {
+    public void endAt(Dot endDot) {
         this.endDot = endDot;
     }
 
@@ -30,7 +30,7 @@ public class LineDrawing {
         currentPoint = null;
     }
 
-    public Point getStartingDot() {
+    public Dot getStartingDot() {
         return startingDot;
     }
 
@@ -38,7 +38,7 @@ public class LineDrawing {
         return currentPoint;
     }
 
-    public Point getEndDot() {
+    public Dot getEndDot() {
         return endDot;
     }
 
