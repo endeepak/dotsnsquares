@@ -2,6 +2,7 @@ package com.example.dotnsquares.domain;
 
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.Rect;
 
 public class Board {
     public LineDrawing lineDrawing = new LineDrawing();
@@ -22,24 +23,24 @@ public class Board {
     }
 
     public void updateLineDrawingPosition(float x, float y) {
-        Point currentPoint = getPointBasedOnDirection(x, y);
+        LinePath linePath = LinePath.create(lineDrawing.getStartingDot().getPoint(), new Point((int) x, (int) y));
+        Point currentPoint = linePath.getPointBasedOnDirection(x, y);
         lineDrawing.moveTo(currentPoint);
-        lineDrawing.endAt(this.getDotForCoordinates(lineDrawing.getCurrentPoint().x, lineDrawing.getCurrentPoint().y));
+        lineDrawing.endAt(getEndDotFor(linePath));
         if (lineDrawing.isCompleted()) {
             Dot startingDot = lineDrawing.getStartingDot();
             Dot endDot = lineDrawing.getEndDot();
             completedLinesPath.moveTo(startingDot.x, startingDot.y);
             completedLinesPath.lineTo(endDot.x, endDot.y);
 
-            LinearPath currentLinePath = LinearPath.create(startingDot.getPoint(), endDot.getPoint());
-            Dot lowerDot = currentLinePath.getDirectionType() == LinearPath.DirectionType.Forward ? startingDot : endDot;
-            int lineIndex = currentLinePath.isHorizontal() ? lowerDot.row * (2 * boardSize + 1) + lowerDot.column : boardSize + (lowerDot.row * (2 * boardSize + 1)) + lowerDot.column;
+            Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
+            int lineIndex = linePath.isHorizontal() ? lowerDot.row * (2 * boardSize + 1) + lowerDot.column : boardSize + (lowerDot.row * (2 * boardSize + 1)) + lowerDot.column;
             isLinesCompleted[lineIndex] = true;
 
-            if (currentLinePath.isHorizontal()) {
+            if (linePath.isHorizontal()) {
                 if (lowerDot.row < boardSize) checkSquareCompletion(lowerDot.row, lowerDot.column);
                 if (lowerDot.row > 0) checkSquareCompletion(lowerDot.row - 1, lowerDot.column);
-            } else if (currentLinePath.isVertical()) {
+            } else if (linePath.isVertical()) {
                 if (lowerDot.column < boardSize) checkSquareCompletion(lowerDot.row, lowerDot.column);
                 if (lowerDot.column > 0) checkSquareCompletion(lowerDot.row, lowerDot.column - 1);
             }
@@ -48,28 +49,29 @@ public class Board {
 
     }
 
+    private Dot getEndDotFor(LinePath linePath) {
+        Dot startingDot = lineDrawing.getStartingDot();
+        int distanceBetweenDots = lineSize - dotRadius;
+        if(linePath.isHorizontal() && Math.abs(linePath.getDx()) >= distanceBetweenDots) {
+            if (linePath.getDirection() == LinePath.Direction.LeftToRight)
+                return startingDot.column < numberOfDotColumns - 1 ? dots[startingDot.row][startingDot.column + 1] : null;
+            else
+                return startingDot.column > 0 ? dots[startingDot.row][startingDot.column - 1] : null;
+        }
+        if(linePath.isVertical() && Math.abs(linePath.getDy()) >= distanceBetweenDots) {
+            if (linePath.getDirection() == LinePath.Direction.TopToBottom)
+                return startingDot.row < numberOfDotRows - 1 ? dots[startingDot.row + 1][startingDot.column] : null;
+            else
+                return startingDot.row > 0 ? dots[startingDot.row - 1][startingDot.column] : null;
+        }
+        return null;
+    }
+
     void checkSquareCompletion(int row, int column) {
         int firstLineIndex = row * (2 * boardSize + 1) + column;
         if (isLinesCompleted[firstLineIndex] && isLinesCompleted[firstLineIndex + boardSize]
                 && isLinesCompleted[firstLineIndex + boardSize + 1] && isLinesCompleted[firstLineIndex + 2 * boardSize + 1])
             squares[row][column] = "C";
-    }
-
-    Point getPointBasedOnDirection(float x, float y) {
-        LinearPath linearPath = LinearPath.create(lineDrawing.getStartingDot().getPoint(), new Point((int) x, (int) y));
-        float xBasedOnDirection;
-        float yBasedOnDirection;
-        if (linearPath.isHorizontal()) {
-            xBasedOnDirection = x;
-            yBasedOnDirection = lineDrawing.getStartingDot().y;
-        } else if (linearPath.isVertical()) {
-            xBasedOnDirection = lineDrawing.getStartingDot().x;
-            yBasedOnDirection = y;
-        } else {
-            xBasedOnDirection = x;
-            yBasedOnDirection = y;
-        }
-        return new Point((int) xBasedOnDirection, (int) yBasedOnDirection);
     }
 
     Dot getDotForCoordinates(float x, float y) {
