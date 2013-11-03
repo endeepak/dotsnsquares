@@ -1,8 +1,8 @@
 Backlog
 -------
-* Come back to same state after resume
 * Two human players same phone
 * Human player vs bot 
+* Come back to same state after resume [Done]
 
 
 Defects

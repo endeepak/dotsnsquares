@@ -2,7 +2,9 @@ package com.example.dotnsquares.domain;
 
 import android.graphics.Point;
 
-public class Dot {
+import java.io.Serializable;
+
+public class Dot implements Serializable {
     public final int row;
     public final int column;
     public final int x;

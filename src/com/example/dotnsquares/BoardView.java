@@ -13,7 +13,7 @@ import com.example.dotnsquares.domain.Dot;
 
 public class BoardView extends View implements View.OnTouchListener{
     private final Paint squareFillPaint;
-    private final Board board;
+    private Board board;
     private final Paint linePaint;
     private final Paint dotsPaint;
 
@@ -106,5 +106,14 @@ public class BoardView extends View implements View.OnTouchListener{
         currentPath.lineTo(board.lineDrawing.getCurrentPoint().x, board.lineDrawing.getCurrentPoint().y);
         currentPath.setFillType(Path.FillType.WINDING);
         return currentPath;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+        invalidate();
     }
 }

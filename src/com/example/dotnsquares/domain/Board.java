@@ -4,8 +4,9 @@ import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.Rect;
 
-public class Board {
-    public LineDrawing lineDrawing = new LineDrawing();
+import java.io.Serializable;
+
+public class Board implements Serializable {
     private final int boardSize = 5;
     public final int numberOfDotRows = boardSize + 1;
     public final int numberOfDotColumns = boardSize + 1;
@@ -13,7 +14,8 @@ public class Board {
     public final int dotRadius = lineThickness;
     final int dotDiameter = 2 * dotRadius;
     public final int lineSize = 50;
-    public final Path completedLinesPath = new Path();
+    transient public final Path completedLinesPath = new Path();
+    transient public LineDrawing lineDrawing = new LineDrawing();
     public final Dot[][] dots = new Dot[numberOfDotRows][numberOfDotColumns];
     final boolean[] isLinesCompleted = new boolean[2 * boardSize * (boardSize + 1)];
     public final String[][] squares = new String[boardSize][boardSize];
