@@ -1,7 +1,7 @@
 Backlog
 -------
 * Two human players same phone
-* Human player vs bot 
+* Human participant vs bot
 * Come back to same state after resume [Done]
 
 

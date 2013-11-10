@@ -2,25 +2,38 @@ package com.example.dotnsquares.domain;
 
 import android.graphics.Path;
 import android.graphics.Point;
-import android.graphics.Rect;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Board implements Serializable {
-    private final int boardSize = 5;
-    public final int numberOfDotRows = boardSize + 1;
-    public final int numberOfDotColumns = boardSize + 1;
-    public final int lineThickness = 10;
-    public final int dotRadius = lineThickness;
-    final int dotDiameter = 2 * dotRadius;
-    public final int lineSize = 50;
+    private final int boardSize;
+    public final int numberOfDotRows;
+    public final int numberOfDotColumns;
+    public final int lineThickness;
+    public final int dotRadius;
+    final int dotDiameter;
+    public final int lineSize;
     transient public final Path completedLinesPath = new Path();
     transient public LineDrawing lineDrawing = new LineDrawing();
-    public final Dot[][] dots = new Dot[numberOfDotRows][numberOfDotColumns];
-    final boolean[] isLinesCompleted = new boolean[2 * boardSize * (boardSize + 1)];
-    public final String[][] squares = new String[boardSize][boardSize];
+    public final Dot[][] dots;
+    final boolean[] isLinesCompleted;
+    public final Square[][] squares;
+    private final ArrayList<LineDrawnEventListener> lineDrawingListeners = new ArrayList<LineDrawnEventListener>();
+    private int numberOfSquaresCompleted = 0;
+    private int currentSquareFillColor;
 
-    public Board() {
+    public Board(int boardSize, int boardWidth) {
+        this.boardSize = boardSize;
+        dotRadius = boardWidth / (boardSize * 7);
+        lineThickness = dotRadius;
+        dotDiameter = 2 * dotRadius;
+        this.lineSize = (boardWidth - dotDiameter) / boardSize;
+        numberOfDotRows = this.boardSize + 1;
+        numberOfDotColumns = this.boardSize + 1;
+        dots = new Dot[numberOfDotRows][numberOfDotColumns];
+        isLinesCompleted = new boolean[2 * this.boardSize * (this.boardSize + 1)];
+        squares = new Square[this.boardSize][this.boardSize];
         initialiseDots();
     }
 
@@ -32,23 +45,32 @@ public class Board implements Serializable {
         if (lineDrawing.isCompleted()) {
             Dot startingDot = lineDrawing.getStartingDot();
             Dot endDot = lineDrawing.getEndDot();
+            Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
+            int lineIndex = linePath.isHorizontal() ? lowerDot.row * (2 * boardSize + 1) + lowerDot.column : boardSize + (lowerDot.row * (2 * boardSize + 1)) + lowerDot.column;
+            if(isLinesCompleted[lineIndex]) return;
+
+            isLinesCompleted[lineIndex] = true;
             completedLinesPath.moveTo(startingDot.x, startingDot.y);
             completedLinesPath.lineTo(endDot.x, endDot.y);
 
-            Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
-            int lineIndex = linePath.isHorizontal() ? lowerDot.row * (2 * boardSize + 1) + lowerDot.column : boardSize + (lowerDot.row * (2 * boardSize + 1)) + lowerDot.column;
-            isLinesCompleted[lineIndex] = true;
 
+            int numberOfSquaresCompletedPreviously = numberOfSquaresCompleted;
             if (linePath.isHorizontal()) {
-                if (lowerDot.row < boardSize) checkSquareCompletion(lowerDot.row, lowerDot.column);
-                if (lowerDot.row > 0) checkSquareCompletion(lowerDot.row - 1, lowerDot.column);
+                if (lowerDot.row < boardSize) checkAndMarkSquareCompletion(lowerDot.row, lowerDot.column);
+                if (lowerDot.row > 0) checkAndMarkSquareCompletion(lowerDot.row - 1, lowerDot.column);
             } else if (linePath.isVertical()) {
-                if (lowerDot.column < boardSize) checkSquareCompletion(lowerDot.row, lowerDot.column);
-                if (lowerDot.column > 0) checkSquareCompletion(lowerDot.row, lowerDot.column - 1);
+                if (lowerDot.column < boardSize) checkAndMarkSquareCompletion(lowerDot.row, lowerDot.column);
+                if (lowerDot.column > 0) checkAndMarkSquareCompletion(lowerDot.row, lowerDot.column - 1);
             }
             lineDrawing.reset();
+            publishLineDrawnEvent(new LineDrawnEvent(numberOfSquaresCompleted - numberOfSquaresCompletedPreviously));
         }
+    }
 
+    private void publishLineDrawnEvent(LineDrawnEvent lineDrawnEvent) {
+        for(LineDrawnEventListener lineDrawingListener: lineDrawingListeners){
+            lineDrawingListener.onLineDrawn(lineDrawnEvent);
+        }
     }
 
     private Dot getEndDotFor(LinePath linePath) {
@@ -69,11 +91,16 @@ public class Board implements Serializable {
         return null;
     }
 
-    void checkSquareCompletion(int row, int column) {
+    void checkAndMarkSquareCompletion(int row, int column) {
+        if(squares[row][column] != null) return;
         int firstLineIndex = row * (2 * boardSize + 1) + column;
-        if (isLinesCompleted[firstLineIndex] && isLinesCompleted[firstLineIndex + boardSize]
-                && isLinesCompleted[firstLineIndex + boardSize + 1] && isLinesCompleted[firstLineIndex + 2 * boardSize + 1])
-            squares[row][column] = "C";
+        if (isLinesCompleted[firstLineIndex]
+                && isLinesCompleted[firstLineIndex + boardSize]
+                && isLinesCompleted[firstLineIndex + boardSize + 1]
+                && isLinesCompleted[firstLineIndex + 2 * boardSize + 1]) {
+            squares[row][column] = new Square(currentSquareFillColor);
+            numberOfSquaresCompleted++;
+        }
     }
 
     Dot getDotForCoordinates(float x, float y) {
@@ -113,5 +140,33 @@ public class Board implements Serializable {
 
     public void resetLineDrawing() {
         lineDrawing.reset();
+    }
+
+    public void addLineDrawingListener(LineDrawnEventListener lineDrawingListener) {
+        lineDrawingListeners.add(lineDrawingListener);
+    }
+
+    public void setCurrentSquareFillColor(int color) {
+        this.currentSquareFillColor = color;
+    }
+
+    public static class LineDrawnEvent {
+        private int numberOfSquaresCompleted;
+
+        public LineDrawnEvent(int numberOfSquaresCompleted) {
+            this.numberOfSquaresCompleted = numberOfSquaresCompleted;
+        }
+
+        public int getNumberOfSquaresCompleted() {
+            return numberOfSquaresCompleted;
+        }
+
+        public boolean areSquaresCompleted() {
+            return numberOfSquaresCompleted > 0;
+        }
+    }
+
+    public static interface LineDrawnEventListener {
+        void onLineDrawn(LineDrawnEvent event);
     }
 }

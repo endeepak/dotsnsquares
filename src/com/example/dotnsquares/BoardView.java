@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.example.dotnsquares.domain.Board;
 import com.example.dotnsquares.domain.Dot;
+import com.example.dotnsquares.domain.Square;
 
 public class BoardView extends View implements View.OnTouchListener{
     private final Paint squareFillPaint;
@@ -21,8 +22,6 @@ public class BoardView extends View implements View.OnTouchListener{
         super(context, attrs);
         this.setOnTouchListener(this);
 
-        board = new Board();
-
         dotsPaint = new Paint();
         dotsPaint.setColor(Color.BLUE);
         dotsPaint.setStyle(Paint.Style.FILL);
@@ -30,20 +29,20 @@ public class BoardView extends View implements View.OnTouchListener{
         linePaint = new Paint();
         linePaint.setColor(Color.BLUE);
         linePaint.setStyle(Paint.Style.STROKE);
-        linePaint.setStrokeWidth(board.lineThickness);
 
         squareFillPaint = new Paint();
-        squareFillPaint.setColor(Color.GREEN);
         squareFillPaint.setStyle(Paint.Style.FILL);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        drawCurrentPath(canvas);
-        drawCompletedSquares(canvas);
-        drawDots(canvas);
-        drawCompletedLines(canvas);
+        if(board != null) {
+            drawCurrentPath(canvas);
+            drawCompletedSquares(canvas);
+            drawDots(canvas);
+            drawCompletedLines(canvas);
+        }
     }
 
     @Override
@@ -87,10 +86,12 @@ public class BoardView extends View implements View.OnTouchListener{
     private void drawCompletedSquares(Canvas canvas) {
         for(int row = 0; row < board.numberOfDotRows - 1; row++){
             for(int column = 0; column < board.numberOfDotColumns - 1; column++){
-                String c = board.squares[row][column];
-                Dot dot = board.dots[row][column];
-                if(c != null)
+                Square square = board.squares[row][column];
+                if(square != null){
+                    Dot dot = board.dots[row][column];
+                    squareFillPaint.setColor(square.getColor());
                     canvas.drawRect(dot.x, dot.y, dot.x + board.lineSize, dot.y + board.lineSize, squareFillPaint);
+                }
             }
         }
     }
@@ -108,12 +109,9 @@ public class BoardView extends View implements View.OnTouchListener{
         return currentPath;
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-    public void setBoard(Board board) {
+    public void initializeBoard(Board board) {
         this.board = board;
+        linePaint.setStrokeWidth(board.lineThickness);
         invalidate();
     }
 }
