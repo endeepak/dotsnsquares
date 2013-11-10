@@ -5,7 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.dotnsquares.domain.Board;
 import com.example.dotnsquares.domain.Game;
 import com.example.dotnsquares.domain.Player;
@@ -90,6 +93,11 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     @Override
     public void onScoreChange(Game.ScoreChangedEvent event) {
         updateScore(event.getCurrentPlayerIndex(), event.getCurrentPlayerScore());
+        if(game.isOver()) {
+            Toast toast = Toast.makeText(this, "Game over!!", Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     @Override

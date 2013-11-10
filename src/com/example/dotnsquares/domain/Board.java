@@ -15,6 +15,7 @@ public class Board implements Serializable {
     final int dotDiameter;
     public final int lineSize;
     transient public final Path completedLinesPath = new Path();
+    private final int dotMargin;
     transient public LineDrawing lineDrawing = new LineDrawing();
     public final Dot[][] dots;
     final boolean[] isLinesCompleted;
@@ -22,15 +23,18 @@ public class Board implements Serializable {
     private final ArrayList<LineDrawnEventListener> lineDrawingListeners = new ArrayList<LineDrawnEventListener>();
     private int numberOfSquaresCompleted = 0;
     private int currentSquareFillColor;
+    private int numberOfSquares;
 
     public Board(int boardSize, int boardWidth) {
         this.boardSize = boardSize;
-        dotRadius = boardWidth / (boardSize * 7);
+        dotRadius = boardWidth / (boardSize * 6);
         lineThickness = dotRadius;
         dotDiameter = 2 * dotRadius;
-        this.lineSize = (boardWidth - dotDiameter) / boardSize;
+        dotMargin = dotDiameter;
+        this.lineSize = (boardWidth - dotDiameter - 2 * dotMargin) / boardSize;
         numberOfDotRows = this.boardSize + 1;
         numberOfDotColumns = this.boardSize + 1;
+        numberOfSquares = this.boardSize * this.boardSize;
         dots = new Dot[numberOfDotRows][numberOfDotColumns];
         isLinesCompleted = new boolean[2 * this.boardSize * (this.boardSize + 1)];
         squares = new Square[this.boardSize][this.boardSize];
@@ -104,10 +108,12 @@ public class Board implements Serializable {
     }
 
     Dot getDotForCoordinates(float x, float y) {
-        int dotRowNumber = getRowOrColumnBasedOnPositionOnAxis(y);
+        if(x < dotMargin || y < dotMargin) return null;
+
+        int dotRowNumber = getRowOrColumnBasedOnPositionOnAxis(y - dotMargin);
         if (dotRowNumber == -1) return null;
 
-        int dotColumnNumber = getRowOrColumnBasedOnPositionOnAxis(x);
+        int dotColumnNumber = getRowOrColumnBasedOnPositionOnAxis(x - dotMargin);
         if (dotColumnNumber == -1) return null;
 
         return dotRowNumber < numberOfDotRows && dotColumnNumber < numberOfDotColumns ? dots[dotRowNumber][dotColumnNumber] : null;
@@ -121,8 +127,8 @@ public class Board implements Serializable {
     }
 
     private void initialiseDots() {
-        int boardTopLeftX = 0 + dotRadius;
-        int boardTopLeftY = 0 + dotRadius;
+        int boardTopLeftX = dotMargin + dotRadius;
+        int boardTopLeftY = dotMargin + dotRadius;
         for (int row = 0; row < numberOfDotRows; row++) {
             for (int column = 0; column < numberOfDotColumns; column++) {
                 dots[row][column] = new Dot(row, column, boardTopLeftX + column * lineSize, boardTopLeftY + row * lineSize);
@@ -148,6 +154,10 @@ public class Board implements Serializable {
 
     public void setCurrentSquareFillColor(int color) {
         this.currentSquareFillColor = color;
+    }
+
+    public int getNumberOfSquares() {
+        return numberOfSquares;
     }
 
     public static class LineDrawnEvent {

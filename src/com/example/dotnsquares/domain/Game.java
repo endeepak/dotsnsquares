@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class Game implements Serializable, Board.LineDrawnEventListener {
     private final Board board;
     private final int numberOfPlayers;
-    private final int[] playerColors = new int[]{Color.MAGENTA, Color.GREEN};
     transient private final ArrayList<PlayerChangedEventListener> playerChangedEventListeners = new ArrayList<PlayerChangedEventListener>();
     transient private final ArrayList<ScoreChangedEventListener> scoreChangedEventListeners = new ArrayList<ScoreChangedEventListener>();
     private final ArrayList<Player> players;
@@ -18,8 +17,8 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
     public Game(Board board) {
         this.board = board;
         players = new ArrayList<Player>();
-        players.add(new Player(new HumanParticipant("John"), Color.MAGENTA));
-        players.add(new Player(new HumanParticipant("Gus"), Color.GREEN));
+        players.add(new Player(new HumanParticipant("John"), Color.parseColor("#D7E6B1")));
+        players.add(new Player(new HumanParticipant("Gus"), Color.parseColor("#0AC9B0")));
         numberOfPlayers = players.size();
         currentPlayerIndex = 0;
         scoreCard = new ScoreCard(players);
@@ -38,7 +37,7 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
         } else {
             int previousPlayerIndex = currentPlayerIndex;
             currentPlayerIndex = (currentPlayerIndex + 1) % numberOfPlayers;
-            board.setCurrentSquareFillColor(playerColors[currentPlayerIndex]);
+            board.setCurrentSquareFillColor(players.get(currentPlayerIndex).getColor());
             publish(new PlayerChangedEvent(previousPlayerIndex, currentPlayerIndex));
         }
     }
@@ -69,6 +68,10 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
 
     public int getCurrentPlayerIndex() {
         return currentPlayerIndex;
+    }
+
+    public boolean isOver(){
+        return scoreCard.getTotalScore() == board.getNumberOfSquares();
     }
 
     public static class PlayerChangedEvent {

@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -14,6 +15,8 @@ import com.example.dotnsquares.domain.Square;
 
 public class BoardView extends View implements View.OnTouchListener{
     private final Paint squareFillPaint;
+    private final int foregroundColor = Color.BLUE;
+    private final Paint focusPaint;
     private Board board;
     private final Paint linePaint;
     private final Paint dotsPaint;
@@ -22,15 +25,20 @@ public class BoardView extends View implements View.OnTouchListener{
         super(context, attrs);
         this.setOnTouchListener(this);
 
-        dotsPaint = new Paint();
-        dotsPaint.setColor(Color.BLUE);
+        dotsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        dotsPaint.setColor(foregroundColor);
         dotsPaint.setStyle(Paint.Style.FILL);
 
-        linePaint = new Paint();
-        linePaint.setColor(Color.BLUE);
+        linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        linePaint.setColor(foregroundColor);
         linePaint.setStyle(Paint.Style.STROKE);
 
-        squareFillPaint = new Paint();
+        focusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        focusPaint.setColor(foregroundColor);
+        focusPaint.setAlpha(125);
+        focusPaint.setStyle(Paint.Style.FILL);
+
+        squareFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         squareFillPaint.setStyle(Paint.Style.FILL);
     }
 
@@ -42,6 +50,14 @@ public class BoardView extends View implements View.OnTouchListener{
             drawCompletedSquares(canvas);
             drawDots(canvas);
             drawCompletedLines(canvas);
+            drawFocusCircle(canvas);
+        }
+    }
+
+    private void drawFocusCircle(Canvas canvas) {
+        if(board.isLineDrawingStarted()){
+            Point currentPoint = board.lineDrawing.getCurrentPoint();
+            canvas.drawCircle(currentPoint.x, currentPoint.y, board.dotRadius * 3, focusPaint);
         }
     }
 
@@ -53,6 +69,7 @@ public class BoardView extends View implements View.OnTouchListener{
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 board.startDrawingLineFrom(x, y);
+
                 break;
             case MotionEvent.ACTION_MOVE:
                 if(board.isLineDrawingStarted()) {
