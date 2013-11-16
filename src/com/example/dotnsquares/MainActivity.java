@@ -6,7 +6,8 @@ import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Gravity;
-import android.view.ViewGroup;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.dotnsquares.domain.Board;
@@ -22,6 +23,8 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     private Game game;
     private final TextView[] playerNameViews = new TextView[2];
     private final TextView[] playerScoreViews = new TextView[2];
+    private int screenWidth;
+    private ImageButton restartButton;
 
     /**
      * Called when the activity is first created.
@@ -29,17 +32,28 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.board);
-        int screenWidth = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
+        setContentView(R.layout.game);
+        screenWidth = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         boardView = (BoardView) findViewById(R.id.board);
         playerNameViews[0] = (TextView) findViewById(R.id.player1Name);
         playerScoreViews[0] = (TextView) findViewById(R.id.player1Score);
         playerNameViews[1] = (TextView) findViewById(R.id.player2Name);
         playerScoreViews[1] = (TextView) findViewById(R.id.player2Score);
-        initialize(new Game(new Board(5, screenWidth)));
+        restartButton = (ImageButton) findViewById(R.id.restartButton);
+        restartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startNewGame();
+            }
+        });
+        startNewGame();
     }
 
-    private void initialize(Game game) {
+    private void startNewGame() {
+        startGame(new Game(new Board(5, screenWidth)));
+    }
+
+    private void startGame(Game game) {
         this.game = game;
         boardView.initializeBoard(game.getBoard());
         game.addPlayerChangedEventListener(this);
@@ -49,6 +63,7 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
             ScoreEntry scoreEntry = scoreEntries.get(index);
             updatePlayerName(index, scoreEntry.getPlayer());
             updateScore(index, scoreEntry.getScore());
+            removeHighlightForPlayer(index);
         }
         highlightPlayer(game.getCurrentPlayerIndex());
     }
@@ -69,7 +84,10 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
 
     private void removeHighlightForPlayer(int currentPlayerIndex) {
         TextView playerNameView = playerNameViews[currentPlayerIndex];
-        playerNameView.setPaintFlags(playerNameView.getPaintFlags() ^ Paint.UNDERLINE_TEXT_FLAG);
+        int paintFlags = playerNameView.getPaintFlags();
+        if((paintFlags & Paint.UNDERLINE_TEXT_FLAG) != 0){
+            playerNameView.setPaintFlags(paintFlags ^ Paint.UNDERLINE_TEXT_FLAG);
+        }
     }
 
     @Override
@@ -81,7 +99,7 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        initialize((Game) savedInstanceState.getSerializable(GAME));
+        startGame((Game) savedInstanceState.getSerializable(GAME));
     }
 
     @Override

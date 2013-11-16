@@ -55,10 +55,12 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
     }
 
     public void addPlayerChangedEventListener(PlayerChangedEventListener listener) {
+        if(playerChangedEventListeners.contains(listener)) return;
         playerChangedEventListeners.add(listener);
     }
 
     public void addScoreChangedEventListener(ScoreChangedEventListener listener) {
+        if(scoreChangedEventListeners.contains(listener)) return;
         scoreChangedEventListeners.add(listener);
     }
 
@@ -72,6 +74,10 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
 
     public boolean isOver(){
         return scoreCard.getTotalScore() == board.getNumberOfSquares();
+    }
+
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
     }
 
     public static class PlayerChangedEvent {

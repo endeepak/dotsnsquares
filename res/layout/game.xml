@@ -33,7 +33,19 @@
     </LinearLayout>
     <view android:layout_width="fill_parent"
           android:layout_height="0dp"
-          class="com.example.dotnsquares.BoardView" android:id="@+id/board" android:layout_weight="9"
+          class="com.example.dotnsquares.BoardView" android:id="@+id/board" android:layout_weight="8"
             />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" android:layout_marginBottom="30dp">
+        <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/restartButton" android:layout_gravity="center"
+                android:layout_weight="0" android:clickable="true"
+                android:src="@drawable/ic_action_refresh" android:background="@drawable/button_border"
+                android:adjustViewBounds="false" android:cropToPadding="false" android:scaleType="center"/>
+    </LinearLayout>
 </LinearLayout>
 
