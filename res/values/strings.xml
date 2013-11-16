@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">dotnsquares</string>
+    <string name="confirm_exit">Are you sure you want to exit?</string>
+    <string name="confirm_restart">Are sure to restart game?</string>
 </resources>

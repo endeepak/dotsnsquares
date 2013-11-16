@@ -1,7 +1,6 @@
 package com.example.dotnsquares;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Paint;
 import android.os.Bundle;
@@ -43,10 +42,19 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startNewGame();
+                restartGame();
             }
         });
         startNewGame();
+    }
+
+    private void restartGame() {
+        ConfirmationDialog.show(this, getString(R.string.confirm_restart), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startNewGame();
+            }
+        });
     }
 
     private void startNewGame() {
@@ -120,15 +128,11 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
 
     @Override
     public void onBackPressed() {
-        new AlertDialog.Builder(this)
-                .setMessage("Are you sure you want to exit?")
-                .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        MainActivity.this.finish();
-                    }
-                })
-                .setNegativeButton("No", null)
-                .show();
+        ConfirmationDialog.show(this, getString(R.string.confirm_exit), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                MainActivity.this.finish();
+            }
+        });
     }
+
 }
