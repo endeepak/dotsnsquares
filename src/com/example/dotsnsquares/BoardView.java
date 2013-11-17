@@ -1,4 +1,4 @@
-package com.example.dotnsquares;
+package com.example.dotsnsquares;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,9 +9,9 @@ import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import com.example.dotnsquares.domain.Board;
-import com.example.dotnsquares.domain.Dot;
-import com.example.dotnsquares.domain.Square;
+import com.example.dotsnsquares.domain.Board;
+import com.example.dotsnsquares.domain.Dot;
+import com.example.dotsnsquares.domain.Square;
 
 public class BoardView extends View implements View.OnTouchListener{
     private final Paint squareFillPaint;

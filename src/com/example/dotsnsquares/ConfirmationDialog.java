@@ -1,4 +1,4 @@
-package com.example.dotnsquares;
+package com.example.dotsnsquares;
 
 import android.app.AlertDialog;
 import android.content.Context;

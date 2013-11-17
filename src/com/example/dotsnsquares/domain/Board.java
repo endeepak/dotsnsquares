@@ -1,4 +1,4 @@
-package com.example.dotnsquares.domain;
+package com.example.dotsnsquares.domain;
 
 import android.graphics.Path;
 import android.graphics.Point;

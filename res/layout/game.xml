@@ -6,35 +6,33 @@
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="fill_parent"
-            android:layout_height="0dp" android:layout_gravity="center" android:layout_weight="1"
-            android:layout_marginRight="5dp">
+            android:layout_height="0dp" android:layout_gravity="center" android:layout_weight="1">
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Player 1"
                 android:id="@+id/player1Name" android:layout_weight="4" android:autoText="false"
-                android:textSize="25dp"/>
+                android:textSize="25dp" android:gravity="left"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:id="@+id/player1Score" android:layout_gravity="left" android:text="0"
-                android:layout_alignParentLeft="true" android:layout_alignParentBottom="true"
-                android:layout_weight="2" android:textSize="25dp"/>
+                android:layout_weight="2" android:textSize="25dp" android:gravity="left"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/player2Score" android:layout_gravity="right" android:text="0"
-                android:layout_alignParentRight="true" android:layout_alignParentBottom="true"
-                android:layout_weight="2" android:textSize="25dp"/>
+                android:layout_weight="2" android:textSize="25dp" android:gravity="right"/>
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Player 2"
-                android:id="@+id/player2Name" android:layout_weight="4" android:textSize="25dp"/>
+                android:id="@+id/player2Name" android:layout_weight="4" android:textSize="25dp"
+                android:gravity="right"/>
     </LinearLayout>
     <view android:layout_width="fill_parent"
           android:layout_height="0dp"
-          class="com.example.dotnsquares.BoardView" android:id="@+id/board" android:layout_weight="8"
+          class="com.example.dotsnsquares.BoardView" android:id="@+id/board" android:layout_weight="8"
             />
     <LinearLayout
             android:orientation="vertical"

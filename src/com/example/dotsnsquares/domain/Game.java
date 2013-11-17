@@ -1,24 +1,21 @@
-package com.example.dotnsquares.domain;
-
-import android.graphics.Color;
+package com.example.dotsnsquares.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Game implements Serializable, Board.LineDrawnEventListener {
     private final Board board;
     private final int numberOfPlayers;
     transient private final ArrayList<PlayerChangedEventListener> playerChangedEventListeners = new ArrayList<PlayerChangedEventListener>();
     transient private final ArrayList<ScoreChangedEventListener> scoreChangedEventListeners = new ArrayList<ScoreChangedEventListener>();
-    private final ArrayList<Player> players;
+    private final List<Player> players;
     private int currentPlayerIndex;
     private final ScoreCard scoreCard;
 
-    public Game(Board board) {
+    public Game(Board board, List<Player> players) {
         this.board = board;
-        players = new ArrayList<Player>();
-        players.add(new Player(new HumanParticipant("John"), Color.parseColor("#D7E6B1")));
-        players.add(new Player(new HumanParticipant("Gus"), Color.parseColor("#0AC9B0")));
+        this.players = players;
         numberOfPlayers = players.size();
         currentPlayerIndex = 0;
         scoreCard = new ScoreCard(players);

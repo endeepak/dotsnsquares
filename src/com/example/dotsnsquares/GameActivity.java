@@ -1,4 +1,4 @@
-package com.example.dotnsquares;
+package com.example.dotsnsquares;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -8,14 +8,15 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.example.dotnsquares.domain.Board;
-import com.example.dotnsquares.domain.Game;
-import com.example.dotnsquares.domain.GameOptions;
-import com.example.dotnsquares.domain.Player;
-import com.example.dotnsquares.domain.ScoreEntry;
+import com.example.dotsnsquares.domain.Board;
+import com.example.dotsnsquares.domain.Game;
+import com.example.dotsnsquares.domain.GameOptions;
+import com.example.dotsnsquares.domain.Player;
+import com.example.dotsnsquares.domain.ScoreEntry;
 
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GameActivity extends Activity implements Game.PlayerChangedEventListener, Game.ScoreChangedEventListener {
     private final String GAME = "game";
@@ -57,7 +58,10 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
     }
 
     private void startNewGame() {
-        startGame(new Game(new Board(gameOptions.getBoardSize().getSize(), screenWidth)));
+        Board board = new Board(gameOptions.getBoardSize().getSize(), screenWidth);
+        List<Player> players = Arrays.asList(gameOptions.getPlayer1(), gameOptions.getPlayer2());
+        Game game = new Game(board, players);
+        startGame(game);
     }
 
     private void startGame(Game game) {
@@ -127,7 +131,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
 
     @Override
     public void onBackPressed() {
-        ConfirmationDialog.show(this, getString(R.string.confirm_exit), new DialogInterface.OnClickListener() {
+        ConfirmationDialog.show(this, getString(R.string.confirm_end_game), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 GameActivity.this.finish();
             }

@@ -1,4 +1,4 @@
-package com.example.dotnsquares;
+package com.example.dotsnsquares;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -7,13 +7,14 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import com.example.dotnsquares.domain.BoardSize;
-import com.example.dotnsquares.domain.GameOptions;
+import com.example.dotsnsquares.domain.BoardSize;
+import com.example.dotsnsquares.domain.GameOptions;
 
 import java.util.ArrayList;
 
 public class MainMenuActivity extends Activity {
     public static final String GAME_OPTIONS = "game_options";
+    public static final int GAME_OPTIONS_OK = 1;
     private final ArrayList<BoardSize> boardSizes = BoardSize.fromSizes(3, 4, 5, 6);
     private GameOptions gameOptions = new GameOptions(boardSizes.get(2));
 
@@ -40,6 +41,19 @@ public class MainMenuActivity extends Activity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GAME_OPTIONS, gameOptions);
         startActivity(intent);
+    }
+
+    public void captureOptions(View view) {
+        Intent intent = new Intent(this, GameOptionsActivity.class);
+        intent.putExtra(GAME_OPTIONS, gameOptions);
+        startActivityForResult(intent, GAME_OPTIONS_OK);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == GAME_OPTIONS_OK) {
+            gameOptions = (GameOptions) data.getSerializableExtra(MainMenuActivity.GAME_OPTIONS);
+        }
     }
 
     public void exit(View view) {

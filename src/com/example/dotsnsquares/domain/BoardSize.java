@@ -11,22 +11,32 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package com.example.dotnsquares.domain;
+package com.example.dotsnsquares.domain;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
-public class GameOptions implements Serializable {
-    private BoardSize boardSize;
+public class BoardSize implements Serializable {
+    private int size;
 
-    public GameOptions(BoardSize boardSize) {
-        this.boardSize = boardSize;
+    public BoardSize(int size) {
+        this.size = size;
     }
 
-    public void setBoardSize(BoardSize boardSize) {
-        this.boardSize = boardSize;
+    @Override
+    public String toString() {
+        return String.format("%s x %s", size, size);
     }
 
-    public BoardSize getBoardSize() {
-        return boardSize;
+    public static ArrayList<BoardSize> fromSizes(int... sizes) {
+        ArrayList<BoardSize> options = new ArrayList<BoardSize>();
+        for (int size : sizes) {
+            options.add(new BoardSize(size));
+        }
+        return options;
+    }
+
+    public int getSize() {
+        return size;
     }
 }

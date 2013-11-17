@@ -1,4 +1,4 @@
-package com.example.dotnsquares.domain;
+package com.example.dotsnsquares.domain;
 
 public interface Participant {
     String getName();

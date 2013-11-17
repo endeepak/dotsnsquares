@@ -1,13 +1,14 @@
-package com.example.dotnsquares.domain;
+package com.example.dotsnsquares.domain;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ScoreCard implements Serializable {
     private final ArrayList<ScoreEntry> scoreEntries = new ArrayList<ScoreEntry>();
     private int totalScore = 0;
 
-    public ScoreCard(ArrayList<Player> players) {
+    public ScoreCard(List<Player> players) {
         for (Player player : players) {
             scoreEntries.add(new ScoreEntry(player));
         }
