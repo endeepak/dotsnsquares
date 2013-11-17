@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/background_dark" android:gravity="center">
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DotsNSquares"
+            android:id="@+id/appTitle" android:textSize="30dp"
+            android:focusableInTouchMode="false" android:singleLine="true" android:textColor="#ffffff"
+            />
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" android:gravity="center">
+        <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/board_size_options" android:layout_gravity="center" android:prompt="@string/confirm_exit"
+                android:spinnerMode="dialog" android:background="#000000"/>
+        <Button
+                android:text="play"
+                android:id="@+id/playButton"
+                android:onClick="play" style="@style/menuButton"/>
+        <Button
+                android:text="options"
+                android:id="@+id/optionsButton"
+                android:onClick="exit" style="@style/menuButton" />
+        <Button
+                android:text="exit"
+                android:id="@+id/exitButton"
+                android:onClick="exit" style="@style/menuButton" />
+    </LinearLayout>
+</LinearLayout>

@@ -6,24 +6,25 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.dotnsquares.domain.Board;
 import com.example.dotnsquares.domain.Game;
+import com.example.dotnsquares.domain.GameOptions;
 import com.example.dotnsquares.domain.Player;
 import com.example.dotnsquares.domain.ScoreEntry;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class MainActivity extends Activity implements Game.PlayerChangedEventListener, Game.ScoreChangedEventListener {
+public class GameActivity extends Activity implements Game.PlayerChangedEventListener, Game.ScoreChangedEventListener {
     private final String GAME = "game";
     private BoardView boardView;
     private Game game;
     private final TextView[] playerNameViews = new TextView[2];
     private final TextView[] playerScoreViews = new TextView[2];
     private int screenWidth;
-    private ImageButton restartButton;
+    private GameOptions gameOptions;
 
     /**
      * Called when the activity is first created.
@@ -32,23 +33,17 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
+        gameOptions = (GameOptions) getIntent().getSerializableExtra(MainMenuActivity.GAME_OPTIONS);
         screenWidth = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         boardView = (BoardView) findViewById(R.id.board);
         playerNameViews[0] = (TextView) findViewById(R.id.player1Name);
         playerScoreViews[0] = (TextView) findViewById(R.id.player1Score);
         playerNameViews[1] = (TextView) findViewById(R.id.player2Name);
         playerScoreViews[1] = (TextView) findViewById(R.id.player2Score);
-        restartButton = (ImageButton) findViewById(R.id.restartButton);
-        restartButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                restartGame();
-            }
-        });
         startNewGame();
     }
 
-    private void restartGame() {
+    public void restartGame(View view) {
         if(game.isOver()) {
             startNewGame();
         } else {
@@ -62,7 +57,7 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     }
 
     private void startNewGame() {
-        startGame(new Game(new Board(5, screenWidth)));
+        startGame(new Game(new Board(gameOptions.getBoardSize().getSize(), screenWidth)));
     }
 
     private void startGame(Game game) {
@@ -134,7 +129,7 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     public void onBackPressed() {
         ConfirmationDialog.show(this, getString(R.string.confirm_exit), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                MainActivity.this.finish();
+                GameActivity.this.finish();
             }
         });
     }

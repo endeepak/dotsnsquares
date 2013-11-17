@@ -14,9 +14,13 @@ Backlog
 * Save game draft and resume
 * Release updated version
 
+Refactor
+--------
+* View/Control for score entry [and score board]
+
 Defects
 -------
-* ?
+* Draw line on already drawn line continues even after next dot
 
 Done
 ----
