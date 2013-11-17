@@ -69,7 +69,7 @@ public class BoardView extends View implements View.OnTouchListener{
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 board.startDrawingLineFrom(x, y);
-
+                invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if(board.isLineDrawingStarted()) {

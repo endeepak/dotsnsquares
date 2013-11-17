@@ -1,10 +1,25 @@
 Backlog
 -------
-* Two human players same phone
+* Option to enter name
+* Option to select board size
 * Human participant vs bot
-* Come back to same state after resume [Done]
-
+* Option to choose player type
+* Two players over blue tooth
+* Two players on same network
+* Two players on internet
+* Release on google play!
+* Remember user's previous choice
+* Add unit tests
+* Make it open source with free licence
+* Save game draft and resume
+* Release updated version
 
 Defects
 -------
-* Line drawing going past multiple dots [Done]
+* ?
+
+Done
+----
+* Line drawing going past multiple dots
+* Come back to same state after resume
+* Two human players same phone

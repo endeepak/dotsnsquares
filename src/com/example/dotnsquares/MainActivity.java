@@ -49,12 +49,16 @@ public class MainActivity extends Activity implements Game.PlayerChangedEventLis
     }
 
     private void restartGame() {
-        ConfirmationDialog.show(this, getString(R.string.confirm_restart), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                startNewGame();
-            }
-        });
+        if(game.isOver()) {
+            startNewGame();
+        } else {
+            ConfirmationDialog.show(this, getString(R.string.confirm_restart), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startNewGame();
+                }
+            });
+        }
     }
 
     private void startNewGame() {
