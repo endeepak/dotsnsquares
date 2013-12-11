@@ -17,15 +17,20 @@
             android:orientation="vertical"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent" android:gravity="center">
+        <Button
+                android:text="play"
+                android:id="@+id/playButton"
+                android:onClick="play" style="@style/menuButton"/>
         <Spinner
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/board_size_options" android:layout_gravity="center" android:prompt="@string/choose_board_size"
                 android:spinnerMode="dialog" android:background="#000000"/>
-        <Button
-                android:text="play"
-                android:id="@+id/playButton"
-                android:onClick="play" style="@style/menuButton"/>
+        <Spinner
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/opponent_options" android:layout_gravity="center" android:prompt="@string/choose_opponent"
+                android:spinnerMode="dialog" android:background="#000000"/>
         <Button
                 android:text="options"
                 android:id="@+id/optionsButton"

@@ -21,6 +21,10 @@ public class Dot implements Serializable {
         return new Point(x,y);
     }
 
+    public DotPosition getPosition() {
+        return new DotPosition(row, column);
+    }
+
     @Override
     public String toString() {
         return "Dot{" +

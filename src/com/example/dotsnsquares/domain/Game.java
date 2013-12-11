@@ -3,8 +3,9 @@ package com.example.dotsnsquares.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class Game implements Serializable, Board.LineDrawnEventListener {
+public class Game implements Serializable, Player.MoveDecidedEventListener {
     private final Board board;
     private final int numberOfPlayers;
     transient private final ArrayList<PlayerChangedEventListener> playerChangedEventListeners = new ArrayList<PlayerChangedEventListener>();
@@ -12,6 +13,7 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
     private final List<Player> players;
     private int currentPlayerIndex;
     private final ScoreCard scoreCard;
+    private String currentToken = UUID.randomUUID().toString();
 
     public Game(Board board, List<Player> players) {
         this.board = board;
@@ -19,7 +21,6 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
         numberOfPlayers = players.size();
         currentPlayerIndex = 0;
         scoreCard = new ScoreCard(players);
-        this.board.addLineDrawingListener(this);
     }
 
     public Board getBoard() {
@@ -27,15 +28,23 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
     }
 
     @Override
-    public void onLineDrawn(Board.LineDrawnEvent event) {
-        if(event.areSquaresCompleted()) {
-            scoreCard.updateScoreForPlayer(currentPlayerIndex, event.getNumberOfSquaresCompleted());
-            publish(new ScoreChangedEvent(currentPlayerIndex, scoreCard.getScoreEntries().get(currentPlayerIndex).getScore()));
+    public void onMoveDecided(Player.MoveDecidedEvent moveDecidedEvent) {
+        if(currentToken.equals(moveDecidedEvent.getToken())) {
+            Board.BoardStateChange boardStateChange = board.drawLine(moveDecidedEvent.getLine());
+            if(boardStateChange.areSquaresCompleted()) {
+                scoreCard.updateScoreForPlayer(currentPlayerIndex, boardStateChange.getNumberOfSquaresCompleted());
+                publish(new ScoreChangedEvent(currentPlayerIndex, scoreCard.getScoreEntries().get(currentPlayerIndex).getScore()));
+            } else {
+                int previousPlayerIndex = currentPlayerIndex;
+                currentPlayerIndex = (currentPlayerIndex + 1) % numberOfPlayers;
+                board.setCurrentSquareFillColor(players.get(currentPlayerIndex).getColor());
+                publish(new PlayerChangedEvent(previousPlayerIndex, currentPlayerIndex));
+            }
+            if(!this.isOver()) {
+                makeCurrentPlayerPlay();
+            }
         } else {
-            int previousPlayerIndex = currentPlayerIndex;
-            currentPlayerIndex = (currentPlayerIndex + 1) % numberOfPlayers;
-            board.setCurrentSquareFillColor(players.get(currentPlayerIndex).getColor());
-            publish(new PlayerChangedEvent(previousPlayerIndex, currentPlayerIndex));
+            throw new UnEthicalMoveException();
         }
     }
 
@@ -73,8 +82,18 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
         return scoreCard.getTotalScore() == board.getNumberOfSquares();
     }
 
-    public int getNumberOfPlayers() {
-        return numberOfPlayers;
+    public void start() {
+        makeCurrentPlayerPlay();
+    }
+
+    private void makeCurrentPlayerPlay() {
+        currentToken = UUID.randomUUID().toString();
+        BoardState boardState = new BoardState(board.getBoardSize(), board.isLinesCompleted.clone(), board.getSquareMatrix());
+        getCurrentPlayer().play(currentToken, this, boardState);
+    }
+
+    private Player getCurrentPlayer() {
+        return players.get(getCurrentPlayerIndex());
     }
 
     public static class PlayerChangedEvent {

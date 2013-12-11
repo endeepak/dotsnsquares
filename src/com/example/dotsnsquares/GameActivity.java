@@ -59,7 +59,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
 
     private void startNewGame() {
         Board board = new Board(gameOptions.getBoardSize().getSize(), screenWidth);
-        List<Player> players = Arrays.asList(gameOptions.getPlayer1(), gameOptions.getPlayer2());
+        List<Player> players = Arrays.asList(gameOptions.getPlayer1(board), gameOptions.getPlayer2(board));
         Game game = new Game(board, players);
         startGame(game);
     }
@@ -77,6 +77,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
             removeHighlightForPlayer(index);
         }
         highlightPlayer(game.getCurrentPlayerIndex());
+        game.start();
     }
 
     private void updateScore(int index, int score) {

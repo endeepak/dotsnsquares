@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import com.example.dotsnsquares.domain.GameOptions;
-import com.example.dotsnsquares.domain.HumanParticipant;
-import com.example.dotsnsquares.domain.Player;
 
 public class GameOptionsActivity extends Activity {
     private GameOptions gameOptions;
@@ -20,15 +18,15 @@ public class GameOptionsActivity extends Activity {
         gameOptions = (GameOptions) getIntent().getSerializableExtra(MainMenuActivity.GAME_OPTIONS);
         player1NameText = (EditText)findViewById(R.id.player1NameText);
         player2NameText = (EditText)findViewById(R.id.player2NameText);
-        player1NameText.setText(gameOptions.getPlayer1().getName());
-        player2NameText.setText(gameOptions.getPlayer2().getName());
+        player1NameText.setText(gameOptions.getPlayer1Name());
+        player2NameText.setText(gameOptions.getPlayer2Name());
     }
 
     public void done(View view) {
         Intent data = new Intent();
         data.putExtra(MainMenuActivity.GAME_OPTIONS, gameOptions);
-        gameOptions.setPlayer1(new Player(new HumanParticipant(getTextOrDefault(player1NameText, GameOptions.DEFAULT_PLAYER1_NAME)), GameOptions.DEFAULT_PLAYER1_COLOR));
-        gameOptions.setPlayer2(new Player(new HumanParticipant(getTextOrDefault(player2NameText, GameOptions.DEFAULT_PLAYER2_NAME)), GameOptions.DEFAULT_PLAYER2_COLOR));
+        gameOptions.setPlayer1Name(getTextOrDefault(player1NameText, GameOptions.DEFAULT_PLAYER1_NAME));
+        gameOptions.setPlayer2Name(getTextOrDefault(player2NameText, GameOptions.DEFAULT_PLAYER2_NAME));
         setResult(MainMenuActivity.GAME_OPTIONS_OK, data);
         finish();
     }

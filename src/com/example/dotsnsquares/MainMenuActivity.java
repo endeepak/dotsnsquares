@@ -11,6 +11,8 @@ import com.example.dotsnsquares.domain.BoardSize;
 import com.example.dotsnsquares.domain.GameOptions;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MainMenuActivity extends Activity {
     public static final String GAME_OPTIONS = "game_options";
@@ -21,6 +23,30 @@ public class MainMenuActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
+        configureBoardSizeOptions();
+        configureOpponentOptions();
+    }
+
+    private void configureOpponentOptions() {
+        Spinner opponentsSinner = (Spinner)findViewById(R.id.opponent_options);
+        final List<GameOptions.Opponent> opponents = Arrays.asList(GameOptions.Opponent.values());
+        ArrayAdapter adapter = new ArrayAdapter<GameOptions.Opponent>(this, R.layout.opponent_selected_menu_option, android.R.id.text1, opponents);
+        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        opponentsSinner.setAdapter(adapter);
+        opponentsSinner.setSelection(opponents.indexOf(gameOptions.getOpponent()));
+        opponentsSinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                gameOptions.setOpponent(opponents.get(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+    }
+
+    private void configureBoardSizeOptions() {
         Spinner boardSizeSpinner = (Spinner)findViewById(R.id.board_size_options);
         ArrayAdapter adapter = new ArrayAdapter<BoardSize>(this, R.layout.menu_option, boardSizes);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
