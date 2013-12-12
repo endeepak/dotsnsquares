@@ -1,27 +1,19 @@
-/**
- * The contents of this file are subject to the OpenMRS Public License
- * Version 1.0 (the "License"); you may not use this file except in
- * compliance with the License. You may obtain a copy of the License at
- * http://license.openmrs.org
- *
- * Software distributed under the License is distributed on an "AS IS"
- * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
- * License for the specific language governing rights and limitations
- * under the License.
- *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
- */
 package com.example.dotsnsquares.domain;
+
+import java.util.ArrayList;
 
 public class BoardState {
     private final int boardSize;
     private final boolean[] completedLines;
+    //TODO: Remove the below fields from here
     private SquareMatrix squareMatrix;
+    private Square[][] squares;
 
-    public BoardState(int boardSize, boolean[] completedLines, SquareMatrix squareMatrix) {
+    public BoardState(int boardSize, boolean[] completedLines, SquareMatrix squareMatrix, Square[][] squares) {
         this.boardSize = boardSize;
         this.completedLines = completedLines;
         this.squareMatrix = squareMatrix;
+        this.squares = squares;
     }
 
     public int getBoardSize() {
@@ -34,5 +26,37 @@ public class BoardState {
 
     public SquareMatrix getSquareMatrix() {
         return squareMatrix;
+    }
+
+    public Square getFirstCompletableSquare() {
+        for (Square[] squareList : squares) {
+            for (Square square : squareList) {
+                if(square.isCompletable())
+                    return square;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<Square> getInCompletableSquares() {
+        ArrayList<Square> inCompletableSquares = new ArrayList<Square>();
+        for (Square[] squareList : squares) {
+            for (Square square : squareList) {
+                if(square.isInCompletable())
+                    inCompletableSquares.add(square);
+            }
+        }
+        return inCompletableSquares;
+    }
+
+    public ArrayList<Square> getOpponentCompletableSquares() {
+        ArrayList<Square> opponentCompletableSquares = new ArrayList<Square>();
+        for (Square[] squareList : squares) {
+            for (Square square : squareList) {
+                if(square.isOpponentCompletable())
+                    opponentCompletableSquares.add(square);
+            }
+        }
+        return opponentCompletableSquares;
     }
 }

@@ -1,4 +1,8 @@
-package com.example.dotsnsquares.domain;
+package com.example.dotsnsquares.bot;
+
+import com.example.dotsnsquares.domain.BoardState;
+import com.example.dotsnsquares.domain.Line;
+import com.example.dotsnsquares.exception.NoMoreLinesAvailableException;
 
 public class BruteForceLineSelectionStrategy implements LineSelectionStrategy {
     @Override

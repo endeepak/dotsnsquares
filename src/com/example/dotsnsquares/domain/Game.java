@@ -1,5 +1,7 @@
 package com.example.dotsnsquares.domain;
 
+import com.example.dotsnsquares.exception.UnEthicalMoveException;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +90,7 @@ public class Game implements Serializable, Player.MoveDecidedEventListener {
 
     private void makeCurrentPlayerPlay() {
         currentToken = UUID.randomUUID().toString();
-        BoardState boardState = new BoardState(board.getBoardSize(), board.isLinesCompleted.clone(), board.getSquareMatrix());
+        BoardState boardState = new BoardState(board.getBoardSize(), board.isLinesCompleted.clone(), board.getSquareMatrix(), board.getSquares());
         getCurrentPlayer().play(currentToken, this, boardState);
     }
 

@@ -2,6 +2,7 @@ package com.example.dotsnsquares.domain;
 
 import android.graphics.Path;
 import android.graphics.Point;
+import com.example.dotsnsquares.exception.AlreadyDrawnLineException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class Board implements Serializable {
     transient public LineDrawing lineDrawing = new LineDrawing();
     public final Dot[][] dots;
     final boolean[] isLinesCompleted;
+    public final SquareOwner[][] squareOwners;
     public final Square[][] squares;
     private final ArrayList<LineDrawnEventListener> lineDrawingListeners = new ArrayList<LineDrawnEventListener>();
     private int numberOfSquaresCompleted = 0;
@@ -39,8 +41,18 @@ public class Board implements Serializable {
         numberOfSquares = this.boardSize * this.boardSize;
         dots = new Dot[numberOfDotRows][numberOfDotColumns];
         isLinesCompleted = new boolean[2 * this.boardSize * (this.boardSize + 1)];
+        squareOwners = new SquareOwner[this.boardSize][this.boardSize];
         squares = new Square[this.boardSize][this.boardSize];
         initialiseDots();
+        initialiseSquares();
+    }
+
+    private void initialiseSquares() {
+        for (int row = 0; row < boardSize; row++) {
+            for (int column = 0; column < boardSize; column++) {
+                squares[row][column] = getSquare(row, column);
+            }
+        }
     }
 
     public void updateLineDrawingPosition(float x, float y) {
@@ -110,15 +122,27 @@ public class Board implements Serializable {
     }
 
     void checkAndMarkSquareCompletion(int row, int column) {
-        if(squares[row][column] != null) return;
-        int firstLineIndex = row * (2 * boardSize + 1) + column;
-        if (isLinesCompleted[firstLineIndex]
-                && isLinesCompleted[firstLineIndex + boardSize]
-                && isLinesCompleted[firstLineIndex + boardSize + 1]
-                && isLinesCompleted[firstLineIndex + 2 * boardSize + 1]) {
-            squares[row][column] = new Square(currentSquareFillColor);
+        if(squareOwners[row][column] != null) return;
+        Square square = getSquare(row, column);
+        squares[row][column] = square;
+        if (square.isComplete()) {
+            squareOwners[row][column] = new SquareOwner(currentSquareFillColor);
             numberOfSquaresCompleted++;
         }
+    }
+
+    private Square getSquare(int row, int column) {
+        int firstLineIndex = row * (2 * boardSize + 1) + column;
+        int[] allLineIndices = new int[] {firstLineIndex, firstLineIndex + boardSize, firstLineIndex + boardSize + 1, firstLineIndex + 2 * boardSize + 1};
+        ArrayList<Integer> completedLineIndices = new ArrayList<Integer>();
+        ArrayList<Integer> inCompleteLineIndices = new ArrayList<Integer>();
+        for (int lineIndex : allLineIndices) {
+            if(isLinesCompleted[lineIndex])
+                completedLineIndices.add(lineIndex);
+            else
+                inCompleteLineIndices.add(lineIndex);
+        }
+        return new Square(completedLineIndices, inCompleteLineIndices);
     }
 
     Dot getDotForCoordinates(float x, float y) {
@@ -184,6 +208,10 @@ public class Board implements Serializable {
 
     public SquareMatrix getSquareMatrix() {
         return squareMatrix;
+    }
+
+    public Square[][] getSquares() {
+        return squares;
     }
 
     public static class LineDrawnEvent {

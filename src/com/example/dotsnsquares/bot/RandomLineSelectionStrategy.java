@@ -1,6 +1,9 @@
-package com.example.dotsnsquares.domain;
+package com.example.dotsnsquares.bot;
 
-import java.io.Serializable;
+import com.example.dotsnsquares.domain.BoardState;
+import com.example.dotsnsquares.domain.Line;
+import com.example.dotsnsquares.exception.NoMoreLinesAvailableException;
+
 import java.util.ArrayList;
 import java.util.Random;
 

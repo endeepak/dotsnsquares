@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.example.dotsnsquares.domain.Board;
 import com.example.dotsnsquares.domain.Dot;
-import com.example.dotsnsquares.domain.Square;
+import com.example.dotsnsquares.domain.SquareOwner;
 
 public class BoardView extends View implements View.OnTouchListener{
     private final Paint squareFillPaint;
@@ -103,10 +103,10 @@ public class BoardView extends View implements View.OnTouchListener{
     private void drawCompletedSquares(Canvas canvas) {
         for(int row = 0; row < board.numberOfDotRows - 1; row++){
             for(int column = 0; column < board.numberOfDotColumns - 1; column++){
-                Square square = board.squares[row][column];
-                if(square != null){
+                SquareOwner squareOwner = board.squareOwners[row][column];
+                if(squareOwner != null){
                     Dot dot = board.dots[row][column];
-                    squareFillPaint.setColor(square.getColor());
+                    squareFillPaint.setColor(squareOwner.getColor());
                     canvas.drawRect(dot.x, dot.y, dot.x + board.lineSize, dot.y + board.lineSize, squareFillPaint);
                 }
             }

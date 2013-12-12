@@ -1,6 +1,8 @@
 package com.example.dotsnsquares.domain;
 
 import android.graphics.Color;
+import com.example.dotsnsquares.bot.BruteForceLineSelectionStrategy;
+import com.example.dotsnsquares.bot.NextStepMaximiserLineSelectionStrategy;
 
 import java.io.Serializable;
 
@@ -14,7 +16,7 @@ public class GameOptions implements Serializable {
     private String player2Name = DEFAULT_PLAYER2_NAME;
     private int player1Color = DEFAULT_PLAYER1_COLOR;
     private int player2Color = DEFAULT_PLAYER2_COLOR;
-    private Opponent opponent = Opponent.EasyBot;
+    private Opponent opponent = Opponent.NormalBot;
 
     public GameOptions(BoardSize boardSize) {
         this.boardSize = boardSize;
@@ -50,7 +52,9 @@ public class GameOptions implements Serializable {
 
     public Player getPlayer2(Board board) {
         if(opponent == Opponent.EasyBot)
-            return new BotPlayer("EasyBot", player2Color);
+            return new BotPlayer("EasyBot", player2Color, new BruteForceLineSelectionStrategy());
+        if(opponent == Opponent.NormalBot)
+            return new BotPlayer("NormalBot", player2Color, new NextStepMaximiserLineSelectionStrategy());
         else
             return new HumanPlayer(getPlayer2Name(), player2Color, board);
     }
@@ -65,7 +69,9 @@ public class GameOptions implements Serializable {
 
     public enum Opponent {
         HumanOnSameDevice("Human"),
-        EasyBot("Bot (easy)");
+        EasyBot("Bot (easy)"),
+        NormalBot("Bot (normal)");
+
         private String name;
 
         Opponent(String name) {

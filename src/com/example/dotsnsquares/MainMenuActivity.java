@@ -18,7 +18,7 @@ public class MainMenuActivity extends Activity {
     public static final String GAME_OPTIONS = "game_options";
     public static final int GAME_OPTIONS_OK = 1;
     private final ArrayList<BoardSize> boardSizes = BoardSize.fromSizes(3, 4, 5, 6);
-    private GameOptions gameOptions = new GameOptions(boardSizes.get(2));
+    private GameOptions gameOptions = new GameOptions(boardSizes.get(0));
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

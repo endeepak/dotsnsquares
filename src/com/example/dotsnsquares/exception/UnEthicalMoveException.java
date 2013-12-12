@@ -1,4 +1,4 @@
-package com.example.dotsnsquares.domain;
+package com.example.dotsnsquares.exception;
 
 public class UnEthicalMoveException extends RuntimeException {
 }
