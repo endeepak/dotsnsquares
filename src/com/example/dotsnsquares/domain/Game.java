@@ -84,6 +84,14 @@ public class Game implements Serializable, Player.MoveDecidedEventListener {
         return scoreCard.getTotalScore() == board.getNumberOfSquares();
     }
 
+    public boolean isNotStarted(){
+        return board.getNumberOfLinesCompleted() == 0;
+    }
+
+    public boolean canBeInterrupted(){
+        return this.isNotStarted() || this.isOver();
+    }
+
     public void start() {
         makeCurrentPlayerPlay();
     }

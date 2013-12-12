@@ -24,6 +24,7 @@ public class Board implements Serializable {
     public final Square[][] squares;
     private final ArrayList<LineDrawnEventListener> lineDrawingListeners = new ArrayList<LineDrawnEventListener>();
     private int numberOfSquaresCompleted = 0;
+    private int numberOfLinesCompleted = 0;
     private int currentSquareFillColor;
     private int numberOfSquares;
     private SquareMatrix squareMatrix;
@@ -83,6 +84,7 @@ public class Board implements Serializable {
         int lineIndex = getLineIndex(linePath, lowerDot);
         if(isLinesCompleted[lineIndex]) throw new AlreadyDrawnLineException();
         isLinesCompleted[lineIndex] = true;
+        numberOfLinesCompleted++;
         completedLinesPath.moveTo(startingDot.x, startingDot.y);
         completedLinesPath.lineTo(endDot.x, endDot.y);
         int numberOfSquaresCompletedPreviously = numberOfSquaresCompleted;
@@ -196,6 +198,10 @@ public class Board implements Serializable {
 
     public int getNumberOfSquares() {
         return numberOfSquares;
+    }
+
+    public int getNumberOfLinesCompleted() {
+        return numberOfLinesCompleted;
     }
 
     public int getBoardSize() {

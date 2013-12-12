@@ -45,7 +45,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
     }
 
     public void restartGame(View view) {
-        if(game.isOver()) {
+        if(game.canBeInterrupted()) {
             startNewGame();
         } else {
             ConfirmationDialog.show(this, getString(R.string.confirm_restart), new DialogInterface.OnClickListener() {
@@ -132,11 +132,16 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
 
     @Override
     public void onBackPressed() {
-        ConfirmationDialog.show(this, getString(R.string.confirm_end_game), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                GameActivity.this.finish();
-            }
-        });
+        if(game.canBeInterrupted()) {
+            super.onBackPressed();
+        } else {
+            ConfirmationDialog.show(this, getString(R.string.confirm_end_game), new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    GameActivity.this.finish();
+                }
+            });
+        }
+
     }
 
 }
