@@ -262,7 +262,7 @@ public class Board implements Serializable {
         }
     }
 
-    public static interface LineDrawnEventListener {
+    public static interface LineDrawnEventListener extends Serializable {
         void onLineDrawn(LineDrawnEvent event);
     }
 }

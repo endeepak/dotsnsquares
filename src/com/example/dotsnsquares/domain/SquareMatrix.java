@@ -13,7 +13,9 @@
  */
 package com.example.dotsnsquares.domain;
 
-public class SquareMatrix {
+import java.io.Serializable;
+
+public class SquareMatrix implements Serializable {
     private int size;
     private int[][] horizontalLineIndexes;
     private int[][] verticalLineIndexes;

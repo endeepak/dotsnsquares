@@ -1,6 +1,8 @@
 package com.example.dotsnsquares.domain;
 
-public class DotPosition {
+import java.io.Serializable;
+
+public class DotPosition implements Serializable{
     private final int row;
     private final int column;
 

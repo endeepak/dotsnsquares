@@ -1,8 +1,9 @@
 package com.example.dotsnsquares.domain;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Square {
+public class Square implements Serializable {
     private final ArrayList<Integer> completedLineIndices;
     private final ArrayList<Integer> inCompleteLineIndices;
 
