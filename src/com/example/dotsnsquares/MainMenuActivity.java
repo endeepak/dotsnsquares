@@ -18,10 +18,11 @@ public class MainMenuActivity extends Activity {
     public static final String GAME_OPTIONS = "game_options";
     public static final int GAME_OPTIONS_OK = 1;
     private final ArrayList<BoardSize> boardSizes = BoardSize.fromSizes(3, 4, 5, 6);
-    private GameOptions gameOptions = new GameOptions(boardSizes.get(0));
+    private GameOptions gameOptions;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        gameOptions = GameOptions.fromPreferences(this.getPreferences(MODE_PRIVATE));
         setContentView(R.layout.main_menu);
         configureBoardSizeOptions();
         configureOpponentOptions();
@@ -77,12 +78,18 @@ public class MainMenuActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == GAME_OPTIONS_OK) {
+        if(requestCode == GAME_OPTIONS_OK && resultCode == GAME_OPTIONS_OK)  {
             gameOptions = (GameOptions) data.getSerializableExtra(MainMenuActivity.GAME_OPTIONS);
         }
     }
 
     public void exit(View view) {
         finish();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        gameOptions.saveToPreferences(this.getPreferences(MODE_PRIVATE));
     }
 }

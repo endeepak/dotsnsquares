@@ -25,8 +25,8 @@ public class GameOptionsActivity extends Activity {
     public void done(View view) {
         Intent data = new Intent();
         data.putExtra(MainMenuActivity.GAME_OPTIONS, gameOptions);
-        gameOptions.setPlayer1Name(getTextOrDefault(player1NameText, GameOptions.DEFAULT_PLAYER1_NAME));
-        gameOptions.setPlayer2Name(getTextOrDefault(player2NameText, GameOptions.DEFAULT_PLAYER2_NAME));
+        gameOptions.setPlayer1Name(getTextOrDefault(player1NameText, gameOptions.getPlayer1Name()));
+        gameOptions.setPlayer2Name(getTextOrDefault(player2NameText, gameOptions.getPlayer2Name()));
         setResult(MainMenuActivity.GAME_OPTIONS_OK, data);
         finish();
     }

@@ -15,6 +15,23 @@ public class BoardSize implements Serializable {
         return String.format("%s x %s", size, size);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        BoardSize boardSize = (BoardSize) o;
+
+        if (size != boardSize.size) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return size;
+    }
+
     public static ArrayList<BoardSize> fromSizes(int... sizes) {
         ArrayList<BoardSize> options = new ArrayList<BoardSize>();
         for (int size : sizes) {
