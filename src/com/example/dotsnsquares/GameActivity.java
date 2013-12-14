@@ -143,5 +143,4 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
         }
 
     }
-
 }

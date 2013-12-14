@@ -1,6 +1,7 @@
 package com.example.dotsnsquares;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -91,5 +92,14 @@ public class MainMenuActivity extends Activity {
     protected void onStop() {
         super.onStop();
         gameOptions.saveToPreferences(this.getPreferences(MODE_PRIVATE));
+    }
+
+    @Override
+    public void onBackPressed() {
+        ConfirmationDialog.show(this, getString(R.string.confirm_exit), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                MainMenuActivity.this.finish();
+            }
+        });
     }
 }

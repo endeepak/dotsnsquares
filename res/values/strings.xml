@@ -4,5 +4,6 @@
     <string name="choose_board_size">Choose board size</string>
     <string name="confirm_end_game">Are you sure to end the game?</string>
     <string name="confirm_restart">Are you sure to restart the game?</string>
+    <string name="confirm_exit">Do you want to exit?</string>
     <string name="choose_opponent">Choose opponent</string>
 </resources>
