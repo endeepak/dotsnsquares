@@ -59,7 +59,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
 
     private void startNewGame() {
         Board board = new Board(gameOptions.getBoardSize().getSize(), screenWidth);
-        List<Player> players = Arrays.asList(gameOptions.getPlayer1(board), gameOptions.getPlayer2(board));
+        List<Player> players = Arrays.asList(gameOptions.getPlayer1(board), gameOptions.getPlayer2(board, boardView));
         Game game = new Game(board, players);
         startGame(game);
     }

@@ -2,6 +2,7 @@ package com.example.dotsnsquares.domain;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import com.example.dotsnsquares.BoardView;
 import com.example.dotsnsquares.bot.BruteForceLineSelectionStrategy;
 import com.example.dotsnsquares.bot.NextStepMaximiserLineSelectionStrategy;
 
@@ -50,11 +51,11 @@ public class GameOptions implements Serializable {
         return new HumanPlayer(getPlayer1Name(), player1Color, board);
     }
 
-    public Player getPlayer2(Board board) {
+    public Player getPlayer2(Board board, BoardView boardView) {
         if(opponent == Opponent.EasyBot)
-            return new BotPlayer("EasyBot", player2Color, new BruteForceLineSelectionStrategy());
+            return new BotPlayer("EasyBot", player2Color, new BruteForceLineSelectionStrategy(), board, boardView);
         if(opponent == Opponent.NormalBot)
-            return new BotPlayer("NormalBot", player2Color, new NextStepMaximiserLineSelectionStrategy());
+            return new BotPlayer("NormalBot", player2Color, new NextStepMaximiserLineSelectionStrategy(), board, boardView);
         else
             return new HumanPlayer(getPlayer2Name(), player2Color, board);
     }

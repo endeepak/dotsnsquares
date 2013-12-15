@@ -55,6 +55,14 @@ public class LinePath {
         return direction.directionType;
     }
 
+    public Point getStartingPoint() {
+        return startingPoint;
+    }
+
+    public Point getEndPoint() {
+        return endPoint;
+    }
+
     public Point getPointBasedOnDirection(float x, float y) {
         float xBasedOnDirection;
         float yBasedOnDirection;

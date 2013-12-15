@@ -57,12 +57,13 @@ public class Board implements Serializable {
     }
 
     public void updateLineDrawingPosition(float x, float y) {
-        LinePath linePath = LinePath.create(lineDrawing.getStartingDot().getPoint(), new Point((int) x, (int) y));
+        Dot startingDot = lineDrawing.getStartingDot();
+        Point startingPoint = startingDot.getPoint();
+        LinePath linePath = LinePath.create(startingPoint, new Point((int) x, (int) y));
         Point currentPoint = linePath.getPointBasedOnDirection(x, y);
         lineDrawing.moveTo(currentPoint);
         lineDrawing.endAt(getEndDotFor(linePath));
         if (lineDrawing.isCompleted()) {
-            Dot startingDot = lineDrawing.getStartingDot();
             Dot endDot = lineDrawing.getEndDot();
             Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
             int lineIndex = getLineIndex(linePath, lowerDot);
@@ -107,7 +108,7 @@ public class Board implements Serializable {
 
     private Dot getEndDotFor(LinePath linePath) {
         Dot startingDot = lineDrawing.getStartingDot();
-        int distanceBetweenDots = lineSize - dotRadius;
+        int distanceBetweenDots = lineSize;
         if(linePath.isHorizontal() && Math.abs(linePath.getDx()) >= distanceBetweenDots) {
             if (linePath.getDirection() == LinePath.Direction.LeftToRight)
                 return startingDot.column < numberOfDotColumns - 1 ? dots[startingDot.row][startingDot.column + 1] : null;
@@ -177,7 +178,8 @@ public class Board implements Serializable {
     }
 
     public void startDrawingLineFrom(float x, float y) {
-        lineDrawing.startFrom(getDotForCoordinates(x, y));
+        Dot dot = getDotForCoordinates(x, y);
+        lineDrawing.startFrom(dot);
     }
 
     public boolean isLineDrawingStarted() {
@@ -218,6 +220,13 @@ public class Board implements Serializable {
 
     public Square[][] getSquares() {
         return squares;
+    }
+
+    public LinePath getLinePath(Line line) {
+        Dot startingDot = dots[line.getStartingDotPosition().getRow()][line.getStartingDotPosition().getColumn()];
+        Dot endingDot = dots[line.getEndDotPosition().getRow()][line.getEndDotPosition().getColumn()];
+        LinePath linePath = LinePath.create(startingDot.getPoint(), endingDot.getPoint());
+        return linePath;
     }
 
     public static class LineDrawnEvent {
