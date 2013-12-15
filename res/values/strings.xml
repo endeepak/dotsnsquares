@@ -8,4 +8,10 @@
     <string name="choose_opponent">Choose opponent</string>
     <string name="choose_bot_speed">Choose Bot Speed</string>
     <string name="bot_drawing_speed">Bot drawing speed : </string>
+    <string name="back_to_menu">Back to Menu</string>
+    <string name="play_again">Play Again</string>
+    <string name="try_again">Try Again</string>
+    <string name="you_won">Congrats! You Won!</string>
+    <string name="you_lost">Oops! You lost!</string>
+    <string name="match_tied">Close game! It was a tie!</string>
 </resources>

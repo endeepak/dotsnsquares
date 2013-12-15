@@ -2,23 +2,24 @@ package com.example.dotsnsquares;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.example.dotsnsquares.domain.Board;
 import com.example.dotsnsquares.domain.Game;
 import com.example.dotsnsquares.domain.GameOptions;
 import com.example.dotsnsquares.domain.Player;
 import com.example.dotsnsquares.domain.ScoreEntry;
+import com.example.dotsnsquares.domain.ScoreState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class GameActivity extends Activity implements Game.PlayerChangedEventListener, Game.ScoreChangedEventListener {
+    private static final int GAME_RESULT = 1;
     private final String GAME = "game";
     private BoardView boardView;
     private Game game;
@@ -124,9 +125,25 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
     public void onScoreChange(Game.ScoreChangedEvent event) {
         updateScore(event.getCurrentPlayerIndex(), event.getCurrentPlayerScore());
         if(game.isOver()) {
-            Toast toast = Toast.makeText(this, "Game over!!", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
+            ScoreState scoreState = game.getScoreState();
+            int resultTextId = scoreState == ScoreState.HostLeading ? R.string.you_won : (scoreState == ScoreState.GuestLeading ?  R.string.you_lost : R.string.match_tied);
+            int playAgainTextId = scoreState == ScoreState.HostLeading ? R.string.play_again : R.string.try_again;
+            Intent intent = new Intent(this, GameResultActivity.class);
+            intent.putExtra(GameResultActivity.RESULT_TEXT_ID, resultTextId);
+            intent.putExtra(GameResultActivity.PLAY_AGAIN_TEXT_ID, playAgainTextId);
+            startActivityForResult(intent, GAME_RESULT);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == GAME_RESULT) {
+            if(resultCode == GameResultActivity.PLAY_AGAIN)  {
+                startNewGame();
+            }
+            else if(resultCode == GameResultActivity.SHOW_MENU) {
+                finish();
+            }
         }
     }
 

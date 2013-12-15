@@ -23,6 +23,10 @@ public class ScoreCard implements Serializable {
         return scoreEntries;
     }
 
+    public int getScore(int playerIndex) {
+        return scoreEntries.get(playerIndex).getScore();
+    }
+
     public int getTotalScore() {
         return totalScore;
     }

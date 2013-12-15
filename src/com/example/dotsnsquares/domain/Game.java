@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.UUID;
 
 public class Game implements Serializable, Player.MoveDecidedEventListener {
+    private static final int HOST_PLAYER_INDEX = 0;
+    private static final int OTHER_PLAYER_INDEX = 1;
     private final Board board;
     private final int numberOfPlayers;
     transient private final ArrayList<PlayerChangedEventListener> playerChangedEventListeners = new ArrayList<PlayerChangedEventListener>();
@@ -104,6 +106,16 @@ public class Game implements Serializable, Player.MoveDecidedEventListener {
 
     private Player getCurrentPlayer() {
         return players.get(getCurrentPlayerIndex());
+    }
+
+    public ScoreState getScoreState() {
+        int hostPlayerScore = scoreCard.getScore(HOST_PLAYER_INDEX);
+        int otherPlayerScore = scoreCard.getScore(OTHER_PLAYER_INDEX);
+        if(hostPlayerScore > otherPlayerScore)
+            return ScoreState.HostLeading;
+        if(hostPlayerScore < otherPlayerScore)
+            return ScoreState.GuestLeading;
+        return ScoreState.Tie;
     }
 
     public static class PlayerChangedEvent {
