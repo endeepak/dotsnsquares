@@ -20,16 +20,16 @@ public class LinePathAnimator implements ValueAnimator.AnimatorUpdateListener, A
         this.linePath = board.getLinePath(line);
     }
 
-    public void animate() {
-        getValueAnimator().start();
+    public void animate(int animationTime) {
+        getValueAnimator(animationTime).start();
     }
 
-    private ValueAnimator getValueAnimator() {
+    private ValueAnimator getValueAnimator(int animationTime) {
         PropertyValuesHolder x = PropertyValuesHolder.ofInt("x", linePath.getStartingPoint().x, linePath.getEndPoint().x);
         PropertyValuesHolder y = PropertyValuesHolder.ofInt("y", linePath.getStartingPoint().y, linePath.getEndPoint().y);
         PropertyValuesHolder[] values = {x, y};
         ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(values);
-        valueAnimator.setDuration(1000);
+        valueAnimator.setDuration(animationTime);
         valueAnimator.addUpdateListener(this);
         valueAnimator.addListener(this);
         return valueAnimator;

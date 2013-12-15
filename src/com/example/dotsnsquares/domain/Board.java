@@ -230,24 +230,10 @@ public class Board implements Serializable {
     }
 
     public static class LineDrawnEvent {
-        private int numberOfSquaresCompleted;
         private Line line;
-
-        public LineDrawnEvent(int numberOfSquaresCompleted, Line line) {
-            this.numberOfSquaresCompleted = numberOfSquaresCompleted;
-            this.line = line;
-        }
 
         public LineDrawnEvent(Line line) {
             this.line = line;
-        }
-
-        public int getNumberOfSquaresCompleted() {
-            return numberOfSquaresCompleted;
-        }
-
-        public boolean areSquaresCompleted() {
-            return numberOfSquaresCompleted > 0;
         }
 
         public Line getLine() {

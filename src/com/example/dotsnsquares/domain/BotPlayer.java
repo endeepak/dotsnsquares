@@ -8,15 +8,17 @@ public class BotPlayer implements Player {
     private final LineSelectionStrategy lineSelectionStrategy;
     private final Board board;
     transient private final BoardView boardView;
+    private GameOptions.BotDrawingSpeed botDrawingSpeed;
     private String name;
     private int color;
 
-    public BotPlayer(String name, int color, LineSelectionStrategy lineSelectionStrategy, Board board, BoardView boardView) {
+    public BotPlayer(String name, int color, LineSelectionStrategy lineSelectionStrategy, Board board, BoardView boardView, GameOptions.BotDrawingSpeed botDrawingSpeed) {
         this.name = name;
         this.color = color;
         this.lineSelectionStrategy = lineSelectionStrategy;
         this.board = board;
         this.boardView = boardView;
+        this.botDrawingSpeed = botDrawingSpeed;
     }
 
     @Override
@@ -38,6 +40,6 @@ public class BotPlayer implements Player {
             public void onLineAnimationEnded() {
                 moveDecidedEventListener.onMoveDecided(new MoveDecidedEvent(token, botPlayer, line));
             }
-        }).animate();
+        }).animate(botDrawingSpeed.getAnimationTime());
     }
 }

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import com.example.dotsnsquares.BoardView;
 import com.example.dotsnsquares.bot.BruteForceLineSelectionStrategy;
+import com.example.dotsnsquares.bot.LineSelectionStrategy;
 import com.example.dotsnsquares.bot.NextStepMaximiserLineSelectionStrategy;
 
 import java.io.Serializable;
@@ -15,6 +16,7 @@ public class GameOptions implements Serializable {
     private int player1Color = Defaults.PLAYER1_COLOR;
     private int player2Color = Defaults.PLAYER2_COLOR;
     private Opponent opponent = Defaults.OPPONENT;
+    private BotDrawingSpeed botDrawingSpeed = Defaults.BOT_DRAWING_SPEED;
 
     public GameOptions() {
     }
@@ -53,11 +55,15 @@ public class GameOptions implements Serializable {
 
     public Player getPlayer2(Board board, BoardView boardView) {
         if(opponent == Opponent.EasyBot)
-            return new BotPlayer("EasyBot", player2Color, new BruteForceLineSelectionStrategy(), board, boardView);
+            return getBotPlayer("EasyBot", new BruteForceLineSelectionStrategy(), board, boardView);
         if(opponent == Opponent.NormalBot)
-            return new BotPlayer("NormalBot", player2Color, new NextStepMaximiserLineSelectionStrategy(), board, boardView);
+            return getBotPlayer("NormalBot", new NextStepMaximiserLineSelectionStrategy(), board, boardView);
         else
             return new HumanPlayer(getPlayer2Name(), player2Color, board);
+    }
+
+    private BotPlayer getBotPlayer(String name, LineSelectionStrategy lineSelectionStrategy, Board board, BoardView boardView) {
+        return new BotPlayer(name, player2Color, lineSelectionStrategy, board, boardView, botDrawingSpeed);
     }
 
     public Opponent getOpponent() {
@@ -76,6 +82,7 @@ public class GameOptions implements Serializable {
         edit.putInt(PreferenceNames.PLAYER_2_COLOR, player2Color);
         edit.putInt(PreferenceNames.BOARD_SIZE, boardSize.getSize());
         edit.putString(PreferenceNames.OPPONENT, opponent.name());
+        edit.putString(PreferenceNames.BOT_DRAWING_SPEED, botDrawingSpeed.name());
         edit.commit();
     }
 
@@ -87,6 +94,7 @@ public class GameOptions implements Serializable {
         gameOptions.setPlayer2Color(preferences.getInt(PreferenceNames.PLAYER_2_COLOR, Defaults.PLAYER2_COLOR));
         gameOptions.setBoardSize(new BoardSize(preferences.getInt(PreferenceNames.BOARD_SIZE, Defaults.BOARD_SIZE)));
         gameOptions.setOpponent(Opponent.valueOf(preferences.getString(PreferenceNames.OPPONENT, Defaults.OPPONENT.name())));
+        gameOptions.setBotDrawingSpeed(BotDrawingSpeed.valueOf(preferences.getString(PreferenceNames.BOT_DRAWING_SPEED, Defaults.BOT_DRAWING_SPEED.name())));
         return gameOptions;
     }
 
@@ -98,6 +106,14 @@ public class GameOptions implements Serializable {
         player2Color = color;
     }
 
+    public BotDrawingSpeed getBotDrawingSpeed() {
+        return botDrawingSpeed;
+    }
+
+    public void setBotDrawingSpeed(BotDrawingSpeed botDrawingSpeed) {
+        this.botDrawingSpeed = botDrawingSpeed;
+    }
+
     public static class PreferenceNames {
         public static final String PLAYER_1_NAME = "player1Name";
         public static final String PLAYER_2_NAME = "player2Name";
@@ -105,6 +121,7 @@ public class GameOptions implements Serializable {
         public static final String PLAYER_2_COLOR = "player2Color";
         public static final String BOARD_SIZE = "boardSize";
         public static final String OPPONENT = "opponent";
+        public static final String BOT_DRAWING_SPEED = "bot_drawing_speed";
     }
 
     public static class Defaults {
@@ -113,7 +130,8 @@ public class GameOptions implements Serializable {
         public static final int PLAYER1_COLOR = Color.parseColor("#D7E6B1");
         public static final int PLAYER2_COLOR = Color.parseColor("#0AC9B0");
         public static final int BOARD_SIZE = 3;
-        private static final Opponent OPPONENT = Opponent.NormalBot;
+        public static final Opponent OPPONENT = Opponent.NormalBot;
+        public static final BotDrawingSpeed BOT_DRAWING_SPEED = BotDrawingSpeed.Normal;
     }
 
     public enum Opponent {
@@ -130,6 +148,30 @@ public class GameOptions implements Serializable {
         @Override
         public String toString() {
             return title;
+        }
+    }
+
+    public enum BotDrawingSpeed {
+        None("None", 0),
+        Fast("Fast", 500),
+        Normal("Normal", 1000),
+        Slow("Slow", 2000);
+
+        private String title;
+        private int animationTime;
+
+        BotDrawingSpeed(String title, int animationTime) {
+            this.title = title;
+            this.animationTime = animationTime;
+        }
+
+        @Override
+        public String toString() {
+            return title;
+        }
+
+        public int getAnimationTime() {
+            return animationTime;
         }
     }
 }
