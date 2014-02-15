@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 import com.example.dotsnsquares.domain.Board;
@@ -35,7 +36,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
-        gameOptions = (GameOptions) getIntent().getSerializableExtra(MainMenuActivity.GAME_OPTIONS);
+        gameOptions = GameOptions.fromPreferences(PreferenceManager.getDefaultSharedPreferences(this), getResources());
         screenWidth = getApplicationContext().getResources().getDisplayMetrics().widthPixels;
         boardView = (BoardView) findViewById(R.id.board);
         playerNameViews[0] = (TextView) findViewById(R.id.player1Name);

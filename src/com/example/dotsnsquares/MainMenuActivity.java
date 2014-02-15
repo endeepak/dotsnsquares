@@ -3,7 +3,9 @@ package com.example.dotsnsquares;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,14 +18,13 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainMenuActivity extends Activity {
-    public static final String GAME_OPTIONS = "game_options";
-    public static final int GAME_OPTIONS_OK = 1;
+    public static final int PREFERENCES = 1;
     private final ArrayList<BoardSize> boardSizes = BoardSize.fromSizes(3, 4, 5, 6);
     private GameOptions gameOptions;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        gameOptions = GameOptions.fromPreferences(this.getPreferences(MODE_PRIVATE));
+        gameOptions = GameOptions.fromPreferences(getPreferences(), getResources());
         setContentView(R.layout.main_menu);
         configureBoardSizeOptions();
         configureOpponentOptions();
@@ -67,20 +68,20 @@ public class MainMenuActivity extends Activity {
 
     public void play(View view) {
         Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra(GAME_OPTIONS, gameOptions);
+        gameOptions.saveToPreferences(getPreferences(), getResources());
         startActivity(intent);
     }
 
     public void captureOptions(View view) {
-        Intent intent = new Intent(this, GameOptionsActivity.class);
-        intent.putExtra(GAME_OPTIONS, gameOptions);
-        startActivityForResult(intent, GAME_OPTIONS_OK);
+        Intent intent = new Intent(this, SettingsActivity.class);
+        gameOptions.saveToPreferences(getPreferences(), getResources());
+        startActivityForResult(intent, PREFERENCES);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode == GAME_OPTIONS_OK && resultCode == GAME_OPTIONS_OK)  {
-            gameOptions = (GameOptions) data.getSerializableExtra(MainMenuActivity.GAME_OPTIONS);
+        if(requestCode == PREFERENCES)  {
+            gameOptions = GameOptions.fromPreferences(getPreferences(), getResources());
         }
     }
 
@@ -91,7 +92,11 @@ public class MainMenuActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        gameOptions.saveToPreferences(this.getPreferences(MODE_PRIVATE));
+        gameOptions.saveToPreferences(getPreferences(), getResources());
+    }
+
+    private SharedPreferences getPreferences() {
+        return PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     @Override

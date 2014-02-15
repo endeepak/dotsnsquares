@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/restartButton" android:layout_gravity="center"
                 android:layout_weight="0" android:clickable="true"
-                android:src="@drawable/ic_action_refresh" android:background="@drawable/button_border"
+                android:src="@drawable/ic_action_refresh" android:background="@drawable/element_border"
                 android:adjustViewBounds="false" android:cropToPadding="false" android:scaleType="center"
                 android:onClick="restartGame" android:padding="5dp"/>
     </LinearLayout>

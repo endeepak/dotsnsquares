@@ -1,13 +1,16 @@
 package com.example.dotsnsquares.domain;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Color;
 import com.example.dotsnsquares.BoardView;
+import com.example.dotsnsquares.R;
 import com.example.dotsnsquares.bot.BruteForceLineSelectionStrategy;
 import com.example.dotsnsquares.bot.LineSelectionStrategy;
 import com.example.dotsnsquares.bot.NextStepMaximiserLineSelectionStrategy;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class GameOptions implements Serializable {
     private BoardSize boardSize = new BoardSize(Defaults.BOARD_SIZE);
@@ -74,27 +77,27 @@ public class GameOptions implements Serializable {
         this.opponent = opponent;
     }
 
-    public void saveToPreferences(SharedPreferences preferences) {
+    public void saveToPreferences(SharedPreferences preferences, Resources resources) {
         SharedPreferences.Editor edit = preferences.edit();
-        edit.putString(PreferenceNames.PLAYER_1_NAME, player1Name);
-        edit.putString(PreferenceNames.PLAYER_2_NAME, player2Name);
-        edit.putInt(PreferenceNames.PLAYER_1_COLOR, player1Color);
-        edit.putInt(PreferenceNames.PLAYER_2_COLOR, player2Color);
-        edit.putInt(PreferenceNames.BOARD_SIZE, boardSize.getSize());
-        edit.putString(PreferenceNames.OPPONENT, opponent.name());
-        edit.putString(PreferenceNames.BOT_DRAWING_SPEED, botDrawingSpeed.name());
+        edit.putString(resources.getString(R.string.player1_name_preference_key), player1Name);
+        edit.putString(resources.getString(R.string.player2_name_preference_key), player2Name);
+        edit.putInt(resources.getString(R.string.player1_color_preference_key), player1Color);
+        edit.putInt(resources.getString(R.string.player2_color_preference_key), player2Color);
+        edit.putInt(resources.getString(R.string.board_size_preference_key), boardSize.getSize());
+        edit.putString(resources.getString(R.string.opponent_preference_key), opponent.name());
+        edit.putString(resources.getString(R.string.bot_drawing_speed_preference_key), botDrawingSpeed.name());
         edit.commit();
     }
 
-    public static GameOptions fromPreferences(SharedPreferences preferences){
+    public static GameOptions fromPreferences(SharedPreferences preferences, Resources resources){
         GameOptions gameOptions = new GameOptions();
-        gameOptions.setPlayer1Name(preferences.getString(PreferenceNames.PLAYER_1_NAME, Defaults.PLAYER1_NAME));
-        gameOptions.setPlayer2Name(preferences.getString(PreferenceNames.PLAYER_2_NAME, Defaults.PLAYER2_NAME));
-        gameOptions.setPlayer1Color(preferences.getInt(PreferenceNames.PLAYER_1_COLOR, Defaults.PLAYER1_COLOR));
-        gameOptions.setPlayer2Color(preferences.getInt(PreferenceNames.PLAYER_2_COLOR, Defaults.PLAYER2_COLOR));
-        gameOptions.setBoardSize(new BoardSize(preferences.getInt(PreferenceNames.BOARD_SIZE, Defaults.BOARD_SIZE)));
-        gameOptions.setOpponent(Opponent.valueOf(preferences.getString(PreferenceNames.OPPONENT, Defaults.OPPONENT.name())));
-        gameOptions.setBotDrawingSpeed(BotDrawingSpeed.valueOf(preferences.getString(PreferenceNames.BOT_DRAWING_SPEED, Defaults.BOT_DRAWING_SPEED.name())));
+        gameOptions.setPlayer1Name(preferences.getString(resources.getString(R.string.player1_name_preference_key), Defaults.PLAYER1_NAME));
+        gameOptions.setPlayer2Name(preferences.getString(resources.getString(R.string.player2_name_preference_key), Defaults.PLAYER2_NAME));
+        gameOptions.setPlayer1Color(preferences.getInt(resources.getString(R.string.player1_color_preference_key), Defaults.PLAYER1_COLOR));
+        gameOptions.setPlayer2Color(preferences.getInt(resources.getString(R.string.player2_color_preference_key), Defaults.PLAYER2_COLOR));
+        gameOptions.setBoardSize(new BoardSize(preferences.getInt(resources.getString(R.string.board_size_preference_key), Defaults.BOARD_SIZE)));
+        gameOptions.setOpponent(Opponent.valueOf(preferences.getString(resources.getString(R.string.opponent_preference_key), Defaults.OPPONENT.name())));
+        gameOptions.setBotDrawingSpeed(BotDrawingSpeed.valueOf(preferences.getString(resources.getString(R.string.bot_drawing_speed_preference_key), Defaults.BOT_DRAWING_SPEED.name())));
         return gameOptions;
     }
 
@@ -112,16 +115,6 @@ public class GameOptions implements Serializable {
 
     public void setBotDrawingSpeed(BotDrawingSpeed botDrawingSpeed) {
         this.botDrawingSpeed = botDrawingSpeed;
-    }
-
-    public static class PreferenceNames {
-        public static final String PLAYER_1_NAME = "player1Name";
-        public static final String PLAYER_2_NAME = "player2Name";
-        public static final String PLAYER_1_COLOR = "player1Color";
-        public static final String PLAYER_2_COLOR = "player2Color";
-        public static final String BOARD_SIZE = "boardSize";
-        public static final String OPPONENT = "opponent";
-        public static final String BOT_DRAWING_SPEED = "bot_drawing_speed";
     }
 
     public static class Defaults {
@@ -152,26 +145,28 @@ public class GameOptions implements Serializable {
     }
 
     public enum BotDrawingSpeed {
-        None("None", 0),
-        Fast("Fast", 500),
-        Normal("Normal", 1000),
-        Slow("Slow", 2000);
+        Slow(2000),
+        Normal(1000),
+        Fast(500),
+        Bolt(0);
 
-        private String title;
         private int animationTime;
 
-        BotDrawingSpeed(String title, int animationTime) {
-            this.title = title;
+        BotDrawingSpeed(int animationTime) {
             this.animationTime = animationTime;
-        }
-
-        @Override
-        public String toString() {
-            return title;
         }
 
         public int getAnimationTime() {
             return animationTime;
+        }
+
+        public static String[] getNameValues() {
+            GameOptions.BotDrawingSpeed[] botDrawingSpeeds = GameOptions.BotDrawingSpeed.values();
+            ArrayList<String> values = new ArrayList<String>();
+            for (GameOptions.BotDrawingSpeed botDrawingSpeed : botDrawingSpeeds) {
+                values.add(botDrawingSpeed.name());
+            }
+            return values.toArray(new String[values.size()]);
         }
     }
 }

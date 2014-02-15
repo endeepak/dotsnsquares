@@ -2,6 +2,7 @@ Backlog
 -------
 * User android preference framework for settings
 * Release on google play!
+    * Logo for the app
 * Two players over blue tooth
 * Two players on same network
 * Two players on internet

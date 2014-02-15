@@ -7,11 +7,22 @@
     <string name="confirm_exit">Do you want to exit?</string>
     <string name="choose_opponent">Choose opponent</string>
     <string name="choose_bot_speed">Choose Bot Speed</string>
-    <string name="bot_drawing_speed">Bot drawing speed : </string>
+    <string name="bot_drawing_speed">Bot drawing speed </string>
     <string name="back_to_menu">Back to Menu</string>
     <string name="play_again">Play Again</string>
     <string name="try_again">Try Again</string>
     <string name="you_won">Congrats! You Won!</string>
     <string name="you_lost">Oops! You lost!</string>
     <string name="match_tied">Close game! It was a tie!</string>
+    <string name="player1_name">First player name</string>
+    <string name="player2_name">Second player name</string>
+
+    <!-- Preference Keys -->
+    <string name="player1_name_preference_key">player1_name</string>
+    <string name="player2_name_preference_key">player2_name</string>
+    <string name="player1_color_preference_key">player1_color</string>
+    <string name="player2_color_preference_key">player2_color</string>
+    <string name="board_size_preference_key">board_size</string>
+    <string name="opponent_preference_key">opponent</string>
+    <string name="bot_drawing_speed_preference_key">bot_drawing_speed</string>
 </resources>
