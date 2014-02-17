@@ -32,7 +32,7 @@
     </LinearLayout>
     <view android:layout_width="fill_parent"
           android:layout_height="0dp"
-          class="com.example.dotsnsquares.BoardView" android:id="@+id/board" android:layout_weight="8"
+          class="com.endeepak.dotsnsquares.BoardView" android:id="@+id/board" android:layout_weight="8"
             />
     <LinearLayout
             android:orientation="vertical"
