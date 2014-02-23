@@ -32,9 +32,9 @@
                 android:id="@+id/opponent_options" android:layout_gravity="center" android:prompt="@string/choose_opponent"
                 android:spinnerMode="dialog" android:background="#000000"/>
         <Button
-                android:text="options"
-                android:id="@+id/optionsButton"
-                android:onClick="captureOptions" style="@style/menuButton" />
+                android:text="settings"
+                android:id="@+id/settingsButton"
+                android:onClick="settings" style="@style/menuButton" />
         <Button
                 android:text="exit"
                 android:id="@+id/exitButton"

@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<color name="menu_text_color">#FFFFFF</color></resources>
+    <color name="menu_text_color">#FFFFFF</color>
+    <color name="player_1_default">#D7E6B1</color>
+    <color name="player_2_default">#0AC9B0</color>
+</resources>

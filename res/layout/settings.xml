@@ -3,19 +3,37 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent">
-    <EditTextPreference
-            android:id="@+id/player1_name"
-            android:key="@string/player1_name_preference_key"
-            android:summary="@string/player1_name"
-            android:dialogTitle="@string/player1_name"/>
-    <EditTextPreference
-            android:id="@+id/player2_name"
-            android:key="@string/player2_name_preference_key"
-            android:summary="@string/player2_name"
-            android:dialogTitle="@string/player2_name"/>
-    <ListPreference
-            android:id="@+id/drawing_speed_options"
-            android:key="@string/bot_drawing_speed_preference_key"
-            android:summary="@string/bot_drawing_speed"
-            android:dialogTitle="@string/bot_drawing_speed" />
+    <PreferenceCategory android:title="@string/player1_details">
+        <EditTextPreference
+                android:id="@+id/player1_name"
+                android:key="@string/player1_name_preference_key"
+                android:summary="@string/name"
+                android:dialogTitle="@string/player1_name"/>
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+                android:key="@string/player1_color_preference_key"
+                android:summary="@string/pick_color"
+                android:defaultValue="@color/player_1_default"
+                alphaSlider="true"
+                />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/player2_details">
+        <EditTextPreference
+                android:id="@+id/player2_name"
+                android:key="@string/player2_name_preference_key"
+                android:summary="@string/name"
+                android:dialogTitle="@string/player2_name"/>
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+                android:key="@string/player2_color_preference_key"
+                android:summary="@string/pick_color"
+                android:defaultValue="@color/player_2_default"
+                alphaSlider="true"
+                />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/bot">
+        <ListPreference
+                android:id="@+id/drawing_speed_options"
+                android:key="@string/bot_drawing_speed_preference_key"
+                android:summary="@string/bot_drawing_speed"
+                android:dialogTitle="@string/bot_drawing_speed" />
+    </PreferenceCategory>
 </PreferenceScreen>

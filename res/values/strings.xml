@@ -16,6 +16,11 @@
     <string name="match_tied">Close game! It was a tie!</string>
     <string name="player1_name">First player name</string>
     <string name="player2_name">Second player name</string>
+    <string name="player1_details">Player 1</string>
+    <string name="player2_details">Player 2</string>
+    <string name="name">Name</string>
+    <string name="pick_color">Color</string>
+    <string name="bot">Bot</string>
 
     <!-- Preference Keys -->
     <string name="player1_name_preference_key">player1_name</string>

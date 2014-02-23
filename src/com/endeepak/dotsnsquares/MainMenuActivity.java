@@ -72,7 +72,7 @@ public class MainMenuActivity extends Activity {
         startActivity(intent);
     }
 
-    public void captureOptions(View view) {
+    public void settings(View view) {
         Intent intent = new Intent(this, SettingsActivity.class);
         gameOptions.saveToPreferences(getPreferences(), getResources());
         startActivityForResult(intent, PREFERENCES);
