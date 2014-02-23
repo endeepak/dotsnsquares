@@ -1,5 +1,7 @@
 package com.endeepak.dotsnsquares;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -16,6 +18,34 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         addPreferencesFromResource(R.layout.settings);
         bindPreferences();
         configureBotDrawingSpeed();
+        configureResetSettings();
+    }
+
+    private void configureResetSettings() {
+        Preference resetSettings = findPreference("reset_settings");
+        resetSettings.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference arg0) {
+                ConfirmationDialog.show(getActivity(), getString(R.string.confirm_reset_settings), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        resetSettings();
+                    }
+                });
+                return true;
+            }
+        });
+    }
+
+    private void resetSettings() {
+        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
+        sharedPreferences.edit().clear().commit();
+        GameOptions.initPreferences(sharedPreferences, getResources());
+        restartActivity();
+    }
+
+    private void restartActivity() {
+        getActivity().finish();
+        getActivity().startActivity(getActivity().getIntent());
     }
 
     private void configureBotDrawingSpeed() {

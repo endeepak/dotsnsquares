@@ -100,6 +100,12 @@ public class GameOptions implements Serializable {
         return gameOptions;
     }
 
+    public static void initPreferences(SharedPreferences preferences, Resources resources){
+        GameOptions gameOptions = GameOptions.fromPreferences(preferences, resources);
+        gameOptions.saveToPreferences(preferences, resources);
+    }
+
+
     public void setPlayer1Color(int color) {
         player1Color = color;
     }

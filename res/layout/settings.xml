@@ -36,4 +36,5 @@
                 android:summary="@string/bot_drawing_speed"
                 android:dialogTitle="@string/bot_drawing_speed" />
     </PreferenceCategory>
+    <Preference android:title="Restore Defaults" android:key="reset_settings"/>
 </PreferenceScreen>

@@ -5,6 +5,7 @@
     <string name="confirm_end_game">Are you sure to end the game?</string>
     <string name="confirm_restart">Are you sure to restart the game?</string>
     <string name="confirm_exit">Do you want to exit?</string>
+    <string name="confirm_reset_settings">Are you sure to reset settings?</string>
     <string name="choose_opponent">Choose opponent</string>
     <string name="choose_bot_speed">Choose Bot Speed</string>
     <string name="bot_drawing_speed">Bot drawing speed </string>
@@ -14,8 +15,8 @@
     <string name="you_won">Congrats! You Won!</string>
     <string name="you_lost">Oops! You lost!</string>
     <string name="match_tied">Close game! It was a tie!</string>
-    <string name="player1_name">First player name</string>
-    <string name="player2_name">Second player name</string>
+    <string name="player1_name">Player 1 name</string>
+    <string name="player2_name">Player 2 name</string>
     <string name="player1_details">Player 1</string>
     <string name="player2_details">Player 2</string>
     <string name="name">Name</string>
