@@ -1,67 +1,42 @@
 package com.endeepak.dotsnsquares;
 
-import android.animation.Animator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.graphics.Point;
 import com.endeepak.dotsnsquares.domain.Board;
 import com.endeepak.dotsnsquares.domain.Line;
-import com.endeepak.dotsnsquares.domain.LinePath;
 
-public class LinePathAnimator implements ValueAnimator.AnimatorUpdateListener, Animator.AnimatorListener {
+public class LinePathAnimator implements ValueAnimator.AnimatorUpdateListener {
     private final BoardView boardView;
     private final Board board;
-    private LineAnimationCompletedListener lineAnimationCompletedListener;
-    private final LinePath linePath;
+    private Point startingPoint;
+    private Point endPoint;
 
-    public LinePathAnimator(BoardView boardView, Board board, Line line, LineAnimationCompletedListener lineAnimationCompletedListener) {
+    public LinePathAnimator(BoardView boardView, Board board, Line line) {
         this.boardView = boardView;
         this.board = board;
-        this.lineAnimationCompletedListener = lineAnimationCompletedListener;
-        this.linePath = board.getLinePath(line);
+        startingPoint = board.getDot(line.getStartingDotPosition()).getPoint();
+        endPoint = board.getDot(line.getEndDotPosition()).getPoint();
     }
 
     public void animate(int animationTime) {
+        board.startDrawingLineFrom(startingPoint.x, startingPoint.y);
         getValueAnimator(animationTime).start();
     }
 
     private ValueAnimator getValueAnimator(int animationTime) {
-        PropertyValuesHolder x = PropertyValuesHolder.ofInt("x", linePath.getStartingPoint().x, linePath.getEndPoint().x);
-        PropertyValuesHolder y = PropertyValuesHolder.ofInt("y", linePath.getStartingPoint().y, linePath.getEndPoint().y);
+        PropertyValuesHolder x = PropertyValuesHolder.ofInt("x", startingPoint.x, endPoint.x);
+        PropertyValuesHolder y = PropertyValuesHolder.ofInt("y", startingPoint.y, endPoint.y);
         PropertyValuesHolder[] values = {x, y};
         ValueAnimator valueAnimator = ValueAnimator.ofPropertyValuesHolder(values);
         valueAnimator.setDuration(animationTime);
         valueAnimator.addUpdateListener(this);
-        valueAnimator.addListener(this);
         return valueAnimator;
     }
 
     @Override
     public void onAnimationUpdate(final ValueAnimator animation) {
-        int x = (Integer)animation.getAnimatedValue("x");
-        int y = (Integer)animation.getAnimatedValue("y");
-        board.startDrawingLineFrom(linePath.getStartingPoint().x, linePath.getStartingPoint().y);
-        board.updateLineDrawingPosition(x, y);
+        board.updateLineDrawingPosition((Integer)animation.getAnimatedValue("x"), (Integer)animation.getAnimatedValue("y"), true);
         boardView.invalidate();
-    }
-
-    @Override
-    public void onAnimationStart(Animator animation) {
-    }
-
-    @Override
-    public void onAnimationEnd(Animator animation) {
-        lineAnimationCompletedListener.onLineAnimationEnded();
-    }
-
-    @Override
-    public void onAnimationCancel(Animator animation) {
-    }
-
-    @Override
-    public void onAnimationRepeat(Animator animation) {
-    }
-
-    public static interface LineAnimationCompletedListener {
-        void onLineAnimationEnded();
     }
 }

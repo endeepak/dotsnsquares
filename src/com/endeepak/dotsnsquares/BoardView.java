@@ -13,7 +13,7 @@ import com.endeepak.dotsnsquares.domain.Board;
 import com.endeepak.dotsnsquares.domain.Dot;
 import com.endeepak.dotsnsquares.domain.SquareOwner;
 
-public class BoardView extends View implements View.OnTouchListener{
+public class BoardView extends View {
     private final Paint squareFillPaint;
     private final int foregroundColor = Color.BLUE;
     private final Paint focusPaint;
@@ -23,7 +23,6 @@ public class BoardView extends View implements View.OnTouchListener{
 
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.setOnTouchListener(this);
 
         dotsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         dotsPaint.setColor(foregroundColor);
@@ -59,30 +58,6 @@ public class BoardView extends View implements View.OnTouchListener{
             Point currentPoint = board.lineDrawing.getCurrentPoint();
             canvas.drawCircle(currentPoint.x, currentPoint.y, board.dotRadius * 3, focusPaint);
         }
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
-
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                board.startDrawingLineFrom(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_MOVE:
-                board.updateLineDrawingPosition(x, y);
-                invalidate();
-                break;
-            case MotionEvent.ACTION_UP:
-                if(board.isLineDrawingStarted()) {
-                    board.resetLineDrawing();
-                    invalidate();
-                }
-                break;
-        }
-        return true;
     }
 
     private void drawDots(Canvas canvas) {

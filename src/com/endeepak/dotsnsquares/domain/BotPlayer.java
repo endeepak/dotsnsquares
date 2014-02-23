@@ -32,14 +32,12 @@ public class BotPlayer implements Player {
     }
 
     @Override
-    public void play(final String token, final MoveDecidedEventListener moveDecidedEventListener, BoardState boardState) {
-        final Line line = lineSelectionStrategy.getLine(boardState);
-        final BotPlayer botPlayer = this;
-        new LinePathAnimator(boardView, board, line, new LinePathAnimator.LineAnimationCompletedListener() {
-            @Override
-            public void onLineAnimationEnded() {
-                moveDecidedEventListener.onMoveDecided(new MoveDecidedEvent(token, botPlayer, line));
-            }
-        }).animate(botDrawingSpeed.getAnimationTime());
+    public void play(BoardState boardState) {
+        Line line = lineSelectionStrategy.getLine(boardState);
+        new LinePathAnimator(boardView, board, line).animate(botDrawingSpeed.getAnimationTime());
+    }
+
+    @Override
+    public void stop() {
     }
 }

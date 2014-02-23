@@ -3,21 +3,15 @@ package com.endeepak.dotsnsquares.domain;
 import java.util.ArrayList;
 
 public class BoardState {
-    private final int boardSize;
     private final boolean[] completedLines;
     //TODO: Remove the below fields from here
     private SquareMatrix squareMatrix;
     private Square[][] squares;
 
-    public BoardState(int boardSize, boolean[] completedLines, SquareMatrix squareMatrix, Square[][] squares) {
-        this.boardSize = boardSize;
+    public BoardState(boolean[] completedLines, SquareMatrix squareMatrix, Square[][] squares) {
         this.completedLines = completedLines;
         this.squareMatrix = squareMatrix;
         this.squares = squares;
-    }
-
-    public int getBoardSize() {
-        return boardSize;
     }
 
     public boolean[] getCompletedLines() {

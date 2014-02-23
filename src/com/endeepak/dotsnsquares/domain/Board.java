@@ -56,7 +56,7 @@ public class Board implements Serializable {
         }
     }
 
-    public void updateLineDrawingPosition(float x, float y) {
+    public void updateLineDrawingPosition(float x, float y, boolean aimForCenterOfDot) {
         if(!lineDrawing.isStarted()) {
             startDrawingLineFrom(x, y);
             return;
@@ -66,7 +66,7 @@ public class Board implements Serializable {
         LinePath linePath = LinePath.create(startingPoint, new Point((int) x, (int) y));
         Point currentPoint = linePath.getPointBasedOnDirection(x, y);
         lineDrawing.moveTo(currentPoint);
-        lineDrawing.endAt(getEndDotFor(linePath));
+        lineDrawing.endAt(getEndDotFor(linePath, aimForCenterOfDot));
         if (lineDrawing.isCompleted()) {
             Dot endDot = lineDrawing.getEndDot();
             Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
@@ -82,8 +82,8 @@ public class Board implements Serializable {
     }
 
     public BoardStateChange drawLine(Line line) {
-        Dot startingDot = dots[line.getStartingDotPosition().getRow()][line.getStartingDotPosition().getColumn()];
-        Dot endDot = dots[line.getEndDotPosition().getRow()][line.getEndDotPosition().getColumn()];
+        Dot startingDot = getDot(line.getStartingDotPosition());
+        Dot endDot = getDot(line.getEndDotPosition());
         LinePath linePath = LinePath.create(startingDot.getPoint(), endDot.getPoint());
         Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
         int lineIndex = getLineIndex(linePath, lowerDot);
@@ -110,16 +110,23 @@ public class Board implements Serializable {
         }
     }
 
-    private Dot getEndDotFor(LinePath linePath) {
+    private Dot getEndDotFor(LinePath linePath, boolean aimForCenterOfDot) {
+        Dot nextDotInDirectionOfLinePath = getNextDotInDirectionOf(linePath);
+        if(nextDotInDirectionOfLinePath == null) return null;
+        Point point = linePath.isHorizontal() ? new Point(linePath.getEndPoint().x, nextDotInDirectionOfLinePath.y) : new Point(nextDotInDirectionOfLinePath.x, linePath.getEndPoint().y);
+        int radius = aimForCenterOfDot ? 0 : dotRadius;
+        return Circle.with(nextDotInDirectionOfLinePath.getPoint(), radius).contains(point) ? nextDotInDirectionOfLinePath : null;
+    }
+
+    private Dot getNextDotInDirectionOf(LinePath linePath) {
         Dot startingDot = lineDrawing.getStartingDot();
-        int distanceBetweenDots = lineSize;
-        if(linePath.isHorizontal() && Math.abs(linePath.getDx()) >= distanceBetweenDots) {
+        if(linePath.isHorizontal()) {
             if (linePath.getDirection() == LinePath.Direction.LeftToRight)
                 return startingDot.column < numberOfDotColumns - 1 ? dots[startingDot.row][startingDot.column + 1] : null;
             else
                 return startingDot.column > 0 ? dots[startingDot.row][startingDot.column - 1] : null;
         }
-        if(linePath.isVertical() && Math.abs(linePath.getDy()) >= distanceBetweenDots) {
+        if(linePath.isVertical()) {
             if (linePath.getDirection() == LinePath.Direction.TopToBottom)
                 return startingDot.row < numberOfDotRows - 1 ? dots[startingDot.row + 1][startingDot.column] : null;
             else
@@ -226,11 +233,8 @@ public class Board implements Serializable {
         return squares;
     }
 
-    public LinePath getLinePath(Line line) {
-        Dot startingDot = dots[line.getStartingDotPosition().getRow()][line.getStartingDotPosition().getColumn()];
-        Dot endingDot = dots[line.getEndDotPosition().getRow()][line.getEndDotPosition().getColumn()];
-        LinePath linePath = LinePath.create(startingDot.getPoint(), endingDot.getPoint());
-        return linePath;
+    public Dot getDot(DotPosition startingDotPosition) {
+        return dots[startingDotPosition.getRow()][startingDotPosition.getColumn()];
     }
 
     public static class LineDrawnEvent {

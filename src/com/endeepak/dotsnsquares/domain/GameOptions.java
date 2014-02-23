@@ -11,6 +11,8 @@ import com.endeepak.dotsnsquares.bot.NextStepMaximiserLineSelectionStrategy;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GameOptions implements Serializable {
     private BoardSize boardSize = new BoardSize(Defaults.BOARD_SIZE);
@@ -20,13 +22,6 @@ public class GameOptions implements Serializable {
     private int player2Color = Defaults.PLAYER2_COLOR;
     private Opponent opponent = Defaults.OPPONENT;
     private BotDrawingSpeed botDrawingSpeed = Defaults.BOT_DRAWING_SPEED;
-
-    public GameOptions() {
-    }
-
-    public GameOptions(BoardSize boardSize) {
-        this.boardSize = boardSize;
-    }
 
     public void setBoardSize(BoardSize boardSize) {
         this.boardSize = boardSize;
@@ -52,17 +47,21 @@ public class GameOptions implements Serializable {
         this.player2Name = player2Name;
     }
 
-    public Player getPlayer1(Board board) {
-        return new HumanPlayer(getPlayer1Name(), player1Color, board);
+    public List<Player> getPlayers(Board board, BoardView boardView) {
+        return Arrays.asList(getPlayer1(board, boardView), getPlayer2(board, boardView));
     }
 
-    public Player getPlayer2(Board board, BoardView boardView) {
+    private Player getPlayer1(Board board, BoardView boardView) {
+        return new HumanPlayer(getPlayer1Name(), player1Color, board, boardView);
+    }
+
+    private Player getPlayer2(Board board, BoardView boardView) {
         if(opponent == Opponent.EasyBot)
             return getBotPlayer("EasyBot", new BruteForceLineSelectionStrategy(), board, boardView);
         if(opponent == Opponent.NormalBot)
             return getBotPlayer("NormalBot", new NextStepMaximiserLineSelectionStrategy(), board, boardView);
         else
-            return new HumanPlayer(getPlayer2Name(), player2Color, board);
+            return new HumanPlayer(getPlayer2Name(), player2Color, board, boardView);
     }
 
     private BotPlayer getBotPlayer(String name, LineSelectionStrategy lineSelectionStrategy, Board board, BoardView boardView) {
@@ -107,10 +106,6 @@ public class GameOptions implements Serializable {
 
     public void setPlayer2Color(int color) {
         player2Color = color;
-    }
-
-    public BotDrawingSpeed getBotDrawingSpeed() {
-        return botDrawingSpeed;
     }
 
     public void setBotDrawingSpeed(BotDrawingSpeed botDrawingSpeed) {

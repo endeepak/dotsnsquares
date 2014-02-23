@@ -17,36 +17,7 @@ import java.io.Serializable;
 
 public interface Player extends Serializable {
     String getName();
-
     int getColor();
-
-    void play(String token, MoveDecidedEventListener moveDecidedEventListener, BoardState boardState);
-
-    public interface MoveDecidedEventListener {
-        void onMoveDecided(MoveDecidedEvent moveDecidedEvent);
-    }
-
-    public static class MoveDecidedEvent {
-        private final String token;
-        private final Player player;
-        private final Line line;
-
-        public MoveDecidedEvent(String token, Player player, Line line) {
-            this.token = token;
-            this.player = player;
-            this.line = line;
-        }
-
-        public String getToken() {
-            return token;
-        }
-
-        public Player getPlayer() {
-            return player;
-        }
-
-        public Line getLine() {
-            return line;
-        }
-    }
+    void play(BoardState boardState);
+    void stop();
 }

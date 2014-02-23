@@ -53,7 +53,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
             ConfirmationDialog.show(this, getString(R.string.confirm_restart), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startNewGame();
+                startNewGame();
                 }
             });
         }
@@ -61,8 +61,7 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
 
     private void startNewGame() {
         Board board = new Board(gameOptions.getBoardSize().getSize(), screenWidth);
-        List<Player> players = Arrays.asList(gameOptions.getPlayer1(board), gameOptions.getPlayer2(board, boardView));
-        Game game = new Game(board, players);
+        Game game = new Game(board, gameOptions.getPlayers(board, boardView));
         startGame(game);
     }
 

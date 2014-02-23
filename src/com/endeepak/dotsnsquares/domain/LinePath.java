@@ -5,22 +5,18 @@ import android.graphics.Point;
 public class LinePath {
     private final Point startingPoint;
     private final Point endPoint;
-    private final int dx;
-    private final int dy;
     private final Direction direction;
 
-    public LinePath(Point startingPoint, Point endPoint, int dx, int dy, Direction direction) {
+    public LinePath(Point startingPoint, Point endPoint, Direction direction) {
         this.startingPoint = startingPoint;
         this.endPoint = endPoint;
-        this.dx = dx;
-        this.dy = dy;
         this.direction = direction;
     }
 
     public static LinePath create(Point startingPoint, Point endPoint) {
         int dx = endPoint.x - startingPoint.x;
         int dy = endPoint.y - startingPoint.y;
-        return new LinePath(startingPoint, endPoint, dx, dy, getDirection(dx, dy));
+        return new LinePath(startingPoint, endPoint, getDirection(dx, dy));
     }
 
     private static Direction getDirection(int dx, int dy) {
@@ -39,14 +35,6 @@ public class LinePath {
         return direction.orientationType == OrientationType.Vertical;
     }
 
-    public int getDx() {
-        return dx;
-    }
-
-    public int getDy() {
-        return dy;
-    }
-
     public Direction getDirection() {
         return direction;
     }
@@ -55,27 +43,13 @@ public class LinePath {
         return direction.directionType;
     }
 
-    public Point getStartingPoint() {
-        return startingPoint;
-    }
-
     public Point getEndPoint() {
         return endPoint;
     }
 
     public Point getPointBasedOnDirection(float x, float y) {
-        float xBasedOnDirection;
-        float yBasedOnDirection;
-        if (this.isHorizontal()) {
-            xBasedOnDirection = x;
-            yBasedOnDirection = startingPoint.y;
-        } else if (this.isVertical()) {
-            xBasedOnDirection = startingPoint.x;
-            yBasedOnDirection = y;
-        } else {
-            xBasedOnDirection = x;
-            yBasedOnDirection = y;
-        }
+        float xBasedOnDirection = this.isHorizontal() ? x : startingPoint.x;
+        float yBasedOnDirection = this.isVertical() ? y : startingPoint.y;
         return new Point((int) xBasedOnDirection, (int) yBasedOnDirection);
     }
 
