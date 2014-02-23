@@ -1,14 +1,16 @@
 Backlog
 -------
-* User android preference framework for settings
-* Release on google play!
-    * Logo for the app
+* Connect dots when not started from actual dot
+* Finish end dot when it touches the circumference
+* Color choice for players with headers for players
+* Back navigation on settings with header?
+* Score board styling and design
+* Gesture to start & options
 * Two players over blue tooth
 * Two players on same network
 * Two players on internet
 * Add unit tests
 * Make it open source with free licence
-* Release updated version
 
 Refactor
 --------
@@ -29,3 +31,7 @@ Done
 * Human participant vs bot
 * Option to choose player type
 * Remember user's previous choice
+* User android preference framework for settings
+* Release on google play!
+    * Logo for the app
+* Release updated version

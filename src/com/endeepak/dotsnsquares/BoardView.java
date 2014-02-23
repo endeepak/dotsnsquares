@@ -72,10 +72,8 @@ public class BoardView extends View implements View.OnTouchListener{
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
-                if(board.isLineDrawingStarted()) {
-                    board.updateLineDrawingPosition(x, y);
-                    invalidate();
-                }
+                board.updateLineDrawingPosition(x, y);
+                invalidate();
                 break;
             case MotionEvent.ACTION_UP:
                 if(board.isLineDrawingStarted()) {

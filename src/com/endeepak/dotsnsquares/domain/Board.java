@@ -57,6 +57,10 @@ public class Board implements Serializable {
     }
 
     public void updateLineDrawingPosition(float x, float y) {
+        if(!lineDrawing.isStarted()) {
+            startDrawingLineFrom(x, y);
+            return;
+        }
         Dot startingDot = lineDrawing.getStartingDot();
         Point startingPoint = startingDot.getPoint();
         LinePath linePath = LinePath.create(startingPoint, new Point((int) x, (int) y));
