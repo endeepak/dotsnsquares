@@ -8,7 +8,7 @@
     <string name="confirm_reset_settings">Are you sure to reset settings?</string>
     <string name="choose_opponent">Choose opponent</string>
     <string name="choose_bot_speed">Choose Bot Speed</string>
-    <string name="bot_drawing_speed">Bot drawing speed </string>
+    <string name="bot_drawing_speed">Drawing speed </string>
     <string name="back_to_menu">Back to Menu</string>
     <string name="play_again">Play Again</string>
     <string name="try_again">Try Again</string>
@@ -22,6 +22,8 @@
     <string name="name">Name</string>
     <string name="pick_color">Color</string>
     <string name="bot">Bot</string>
+    <string name="game">Game</string>
+    <string name="drawing_color">Drawing Color</string>
 
     <!-- Preference Keys -->
     <string name="player1_name_preference_key">player1_name</string>
@@ -31,4 +33,5 @@
     <string name="board_size_preference_key">board_size</string>
     <string name="opponent_preference_key">opponent</string>
     <string name="bot_drawing_speed_preference_key">bot_drawing_speed</string>
+    <string name="foreground_color_preference_key">foreground_color</string>
 </resources>

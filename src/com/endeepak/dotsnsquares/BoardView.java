@@ -6,16 +6,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import com.endeepak.dotsnsquares.domain.Board;
 import com.endeepak.dotsnsquares.domain.Dot;
+import com.endeepak.dotsnsquares.domain.GameOptions;
 import com.endeepak.dotsnsquares.domain.SquareOwner;
 
 public class BoardView extends View {
     private final Paint squareFillPaint;
-    private final int foregroundColor = Color.BLUE;
     private final Paint focusPaint;
     private Board board;
     private final Paint linePaint;
@@ -24,16 +25,18 @@ public class BoardView extends View {
     public BoardView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
+        GameOptions gameOptions = GameOptions.fromPreferences(PreferenceManager.getDefaultSharedPreferences(context), context.getResources());
+
         dotsPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        dotsPaint.setColor(foregroundColor);
+        dotsPaint.setColor(gameOptions.getForegroundColor());
         dotsPaint.setStyle(Paint.Style.FILL);
 
         linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        linePaint.setColor(foregroundColor);
+        linePaint.setColor(gameOptions.getForegroundColor());
         linePaint.setStyle(Paint.Style.STROKE);
 
         focusPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        focusPaint.setColor(foregroundColor);
+        focusPaint.setColor(gameOptions.getForegroundColor());
         focusPaint.setAlpha(125);
         focusPaint.setStyle(Paint.Style.FILL);
 

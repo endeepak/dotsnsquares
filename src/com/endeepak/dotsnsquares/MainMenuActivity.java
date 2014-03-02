@@ -28,12 +28,17 @@ public class MainMenuActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_menu);
-        gameOptions = GameOptions.fromPreferences(getPreferences(), getResources());
+        GameOptions.initPreferences(getPreferences(), getResources());
+        initOptionsFromPreferences();
         opponentsSinner = (Spinner)findViewById(R.id.opponent_options);
         boardSizeSpinner = (Spinner)findViewById(R.id.board_size_options);
         configureBoardSizeOptions();
         configureOpponentOptions();
         initViewFromGameOptions();
+    }
+
+    private void initOptionsFromPreferences() {
+        gameOptions = GameOptions.fromPreferences(getPreferences(), getResources());
     }
 
     private void initViewFromGameOptions() {
@@ -88,7 +93,7 @@ public class MainMenuActivity extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == PREFERENCES)  {
-            gameOptions = GameOptions.fromPreferences(getPreferences(), getResources());
+            initOptionsFromPreferences();
         }
     }
 
@@ -99,7 +104,7 @@ public class MainMenuActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        gameOptions = GameOptions.fromPreferences(getPreferences(), getResources());
+        initOptionsFromPreferences();
         initViewFromGameOptions();
     }
 

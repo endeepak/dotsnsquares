@@ -15,13 +15,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class GameOptions implements Serializable {
-    private BoardSize boardSize = new BoardSize(Defaults.BOARD_SIZE);
-    private String player1Name = Defaults.PLAYER1_NAME;
-    private String player2Name = Defaults.PLAYER2_NAME;
-    private int player1Color = Defaults.PLAYER1_COLOR;
-    private int player2Color = Defaults.PLAYER2_COLOR;
-    private Opponent opponent = Defaults.OPPONENT;
-    private BotDrawingSpeed botDrawingSpeed = Defaults.BOT_DRAWING_SPEED;
+    private BoardSize boardSize;
+    private String player1Name;
+    private String player2Name;
+    private int player1Color;
+    private int player2Color;
+    private Opponent opponent;
+    private BotDrawingSpeed botDrawingSpeed;
+    private int foregroundColor;
 
     public void setBoardSize(BoardSize boardSize) {
         this.boardSize = boardSize;
@@ -78,6 +79,7 @@ public class GameOptions implements Serializable {
 
     public void saveToPreferences(SharedPreferences preferences, Resources resources) {
         SharedPreferences.Editor edit = preferences.edit();
+        edit.putInt(resources.getString(R.string.foreground_color_preference_key), foregroundColor);
         edit.putString(resources.getString(R.string.player1_name_preference_key), player1Name);
         edit.putString(resources.getString(R.string.player2_name_preference_key), player2Name);
         edit.putInt(resources.getString(R.string.player1_color_preference_key), player1Color);
@@ -88,12 +90,13 @@ public class GameOptions implements Serializable {
         edit.commit();
     }
 
-    public static GameOptions fromPreferences(SharedPreferences preferences, Resources resources){
+    public static GameOptions fromPreferences(SharedPreferences preferences, Resources resources) {
         GameOptions gameOptions = new GameOptions();
+        gameOptions.setForegroundColor(preferences.getInt(resources.getString(R.string.foreground_color_preference_key), resources.getColor(R.color.foreground_default)));
         gameOptions.setPlayer1Name(preferences.getString(resources.getString(R.string.player1_name_preference_key), Defaults.PLAYER1_NAME));
         gameOptions.setPlayer2Name(preferences.getString(resources.getString(R.string.player2_name_preference_key), Defaults.PLAYER2_NAME));
-        gameOptions.setPlayer1Color(preferences.getInt(resources.getString(R.string.player1_color_preference_key), Defaults.PLAYER1_COLOR));
-        gameOptions.setPlayer2Color(preferences.getInt(resources.getString(R.string.player2_color_preference_key), Defaults.PLAYER2_COLOR));
+        gameOptions.setPlayer1Color(preferences.getInt(resources.getString(R.string.player1_color_preference_key), resources.getColor(R.color.player_1_default)));
+        gameOptions.setPlayer2Color(preferences.getInt(resources.getString(R.string.player2_color_preference_key), resources.getColor(R.color.player_2_default)));
         gameOptions.setBoardSize(new BoardSize(preferences.getInt(resources.getString(R.string.board_size_preference_key), Defaults.BOARD_SIZE)));
         gameOptions.setOpponent(Opponent.valueOf(preferences.getString(resources.getString(R.string.opponent_preference_key), Defaults.OPPONENT.name())));
         gameOptions.setBotDrawingSpeed(BotDrawingSpeed.valueOf(preferences.getString(resources.getString(R.string.bot_drawing_speed_preference_key), Defaults.BOT_DRAWING_SPEED.name())));
@@ -105,6 +108,10 @@ public class GameOptions implements Serializable {
         gameOptions.saveToPreferences(preferences, resources);
     }
 
+    public static void resetPreferences(SharedPreferences preferences, Resources resources){
+        preferences.edit().clear().commit();
+        initPreferences(preferences, resources);
+    }
 
     public void setPlayer1Color(int color) {
         player1Color = color;
@@ -118,11 +125,17 @@ public class GameOptions implements Serializable {
         this.botDrawingSpeed = botDrawingSpeed;
     }
 
+    public void setForegroundColor(int foregroundColor) {
+        this.foregroundColor = foregroundColor;
+    }
+
+    public int getForegroundColor() {
+        return foregroundColor;
+    }
+
     public static class Defaults {
         public static final String PLAYER1_NAME = "Player 1";
         public static final String PLAYER2_NAME = "Player 2";
-        public static final int PLAYER1_COLOR = Color.parseColor("#D7E6B1");
-        public static final int PLAYER2_COLOR = Color.parseColor("#0AC9B0");
         public static final int BOARD_SIZE = 3;
         public static final Opponent OPPONENT = Opponent.NormalBot;
         public static final BotDrawingSpeed BOT_DRAWING_SPEED = BotDrawingSpeed.Normal;

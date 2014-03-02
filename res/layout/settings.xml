@@ -3,6 +3,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent">
+    <PreferenceCategory android:title="@string/game">
+        <net.margaritov.preference.colorpicker.ColorPickerPreference
+                android:key="@string/foreground_color_preference_key"
+                android:title="@string/drawing_color"
+                android:defaultValue="@color/foreground_default"
+                />
+    </PreferenceCategory>
     <PreferenceCategory android:title="@string/player1_details">
         <EditTextPreference
                 android:id="@+id/player1_name"
@@ -11,9 +18,8 @@
                 android:dialogTitle="@string/player1_name"/>
         <net.margaritov.preference.colorpicker.ColorPickerPreference
                 android:key="@string/player1_color_preference_key"
-                android:summary="@string/pick_color"
+                android:title="@string/pick_color"
                 android:defaultValue="@color/player_1_default"
-                alphaSlider="true"
                 />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/player2_details">
@@ -24,9 +30,8 @@
                 android:dialogTitle="@string/player2_name"/>
         <net.margaritov.preference.colorpicker.ColorPickerPreference
                 android:key="@string/player2_color_preference_key"
-                android:summary="@string/pick_color"
+                android:title="@string/pick_color"
                 android:defaultValue="@color/player_2_default"
-                alphaSlider="true"
                 />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/bot">

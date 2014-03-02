@@ -37,9 +37,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     }
 
     private void resetSettings() {
-        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
-        sharedPreferences.edit().clear().commit();
-        GameOptions.initPreferences(sharedPreferences, getResources());
+        GameOptions.resetPreferences(getPreferenceScreen().getSharedPreferences(), getResources());
         restartActivity();
     }
 
