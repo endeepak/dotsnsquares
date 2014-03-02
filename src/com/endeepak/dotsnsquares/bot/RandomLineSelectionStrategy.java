@@ -2,22 +2,21 @@ package com.endeepak.dotsnsquares.bot;
 
 import com.endeepak.dotsnsquares.domain.BoardState;
 import com.endeepak.dotsnsquares.domain.Line;
+import com.endeepak.dotsnsquares.domain.RandomArrayElementSelector;
 import com.endeepak.dotsnsquares.exception.NoMoreLinesAvailableException;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 public class RandomLineSelectionStrategy implements LineSelectionStrategy {
-    private final Random random = new Random();;
+    private final RandomArrayElementSelector randomArrayElementSelector = new RandomArrayElementSelector();
 
     @Override
     public Line getLine(BoardState boardState) {
         boolean[] completedLines = boardState.getCompletedLines();
         ArrayList<Integer> remainingLineIndexes = getRemainingLineIndexes(completedLines);
-        int size = remainingLineIndexes.size();
-        if (size == 0) throw new NoMoreLinesAvailableException();
-        int randomIndex = size == 1 ? 0 : random.nextInt(size - 1);
-        Integer lineIndex = remainingLineIndexes.get(randomIndex);
+        if (remainingLineIndexes.isEmpty()) throw new NoMoreLinesAvailableException();
+        Integer lineIndex = randomArrayElementSelector.getNext(remainingLineIndexes);
         return boardState.getSquareMatrix().getLine(lineIndex);
     }
 

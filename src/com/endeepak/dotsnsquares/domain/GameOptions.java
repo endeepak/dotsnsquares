@@ -2,12 +2,12 @@ package com.endeepak.dotsnsquares.domain;
 
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Color;
 import com.endeepak.dotsnsquares.BoardView;
 import com.endeepak.dotsnsquares.R;
+import com.endeepak.dotsnsquares.bot.AvoidGivingCompletableLineSelectionStrategy;
 import com.endeepak.dotsnsquares.bot.BruteForceLineSelectionStrategy;
 import com.endeepak.dotsnsquares.bot.LineSelectionStrategy;
-import com.endeepak.dotsnsquares.bot.NextStepMaximiserLineSelectionStrategy;
+import com.endeepak.dotsnsquares.bot.LineSelectionStrategyFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,9 +58,9 @@ public class GameOptions implements Serializable {
 
     private Player getPlayer2(Board board, BoardView boardView) {
         if(opponent == Opponent.EasyBot)
-            return getBotPlayer("EasyBot", new BruteForceLineSelectionStrategy(), board, boardView);
+            return getBotPlayer("EasyBot", LineSelectionStrategyFactory.easy(), board, boardView);
         if(opponent == Opponent.NormalBot)
-            return getBotPlayer("NormalBot", new NextStepMaximiserLineSelectionStrategy(), board, boardView);
+            return getBotPlayer("NormalBot", LineSelectionStrategyFactory.normal(), board, boardView);
         else
             return new HumanPlayer(getPlayer2Name(), player2Color, board, boardView);
     }
