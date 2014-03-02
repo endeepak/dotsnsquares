@@ -149,7 +149,7 @@ public class GameOptions implements Serializable {
         Slow(2000),
         Normal(1000),
         Fast(500),
-        Bolt(0);
+        Bolt(1);
 
         private int animationTime;
 

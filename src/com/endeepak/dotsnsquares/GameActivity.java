@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.endeepak.dotsnsquares.domain.Board;
 import com.endeepak.dotsnsquares.domain.Game;
@@ -26,12 +27,10 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
     private Game game;
     private final TextView[] playerNameViews = new TextView[2];
     private final TextView[] playerScoreViews = new TextView[2];
+    private final ImageView[] playerImageViews = new ImageView[2];
     private int screenWidth;
     private GameOptions gameOptions;
 
-    /**
-     * Called when the activity is first created.
-     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +42,8 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
         playerScoreViews[0] = (TextView) findViewById(R.id.player1Score);
         playerNameViews[1] = (TextView) findViewById(R.id.player2Name);
         playerScoreViews[1] = (TextView) findViewById(R.id.player2Score);
+        playerImageViews[0] = (ImageView) findViewById(R.id.player1Image);
+        playerImageViews[1] = (ImageView) findViewById(R.id.player2Image);
         startNewGame();
     }
 
@@ -73,7 +74,10 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
         ArrayList<ScoreEntry> scoreEntries = game.getScoreEntries();
         for (int index=0; index < scoreEntries.size(); index++){
             ScoreEntry scoreEntry = scoreEntries.get(index);
-            updatePlayerName(index, scoreEntry.getPlayer());
+            Player player = scoreEntry.getPlayer();
+            playerNameViews[index].setTextColor(player.getColor());
+            playerScoreViews[index].setTextColor(player.getColor());
+            updatePlayerName(index, player);
             updateScore(index, scoreEntry.getScore());
             removeHighlightForPlayer(index);
         }
@@ -87,20 +91,14 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
 
     private void updatePlayerName(int playerIndex, Player player) {
         playerNameViews[playerIndex].setText(player.getName());
-        playerNameViews[playerIndex].setTextColor(player.getColor());
     }
 
     private void highlightPlayer(int currentPlayerIndex) {
-        TextView playerNameView = playerNameViews[currentPlayerIndex];
-        playerNameView.setPaintFlags(playerNameView.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        playerImageViews[currentPlayerIndex].setVisibility(View.VISIBLE);
     }
 
     private void removeHighlightForPlayer(int currentPlayerIndex) {
-        TextView playerNameView = playerNameViews[currentPlayerIndex];
-        int paintFlags = playerNameView.getPaintFlags();
-        if((paintFlags & Paint.UNDERLINE_TEXT_FLAG) != 0){
-            playerNameView.setPaintFlags(paintFlags ^ Paint.UNDERLINE_TEXT_FLAG);
-        }
+        playerImageViews[currentPlayerIndex].setVisibility(View.INVISIBLE);
     }
 
     @Override

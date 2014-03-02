@@ -40,4 +40,16 @@
         <item name="android:padding">10dp</item>
         <item name="android:layout_marginBottom">10dp</item>
     </style>
+    <style name="playerName">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">25dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="score">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">50dp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>
