@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="background_color">#000000</color>
     <color name="menu_text_color">#FFFFFF</color>
+    <color name="menu_text_focus_color">#0000FF</color>
     <color name="player_1_default">#00FF00</color>
     <color name="player_2_default">#FF0000</color>
     <color name="foreground_default">#0000FF</color>

@@ -142,9 +142,9 @@ public class GameOptions implements Serializable {
     }
 
     public enum Opponent {
-        HumanOnSameDevice("Human"),
-        EasyBot("Bot (easy)"),
-        NormalBot("Bot (normal)");
+        HumanOnSameDevice("human"),
+        EasyBot("bot (easy)"),
+        NormalBot("bot (normal)");
 
         private String title;
 

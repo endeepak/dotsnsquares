@@ -6,31 +6,29 @@
               android:layout_height="match_parent"
               android:background="@android:color/background_dark" android:gravity="center">
 
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:id="@+id/appTitle" android:textSize="30dp"
-            android:focusableInTouchMode="false" android:singleLine="true" android:textColor="#ffffff"
-            />
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" android:gravity="center">
+            android:layout_height="fill_parent" android:gravity="center" android:layout_weight="8">
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+            <TextView android:text="@string/app_name_part_1" android:textColor="#0000FF" style="@style/appTitle"/>
+            <TextView android:text="@string/app_name_part_2" android:textColor="#00FF00" style="@style/appTitle"/>
+            <TextView android:text="@string/app_name_part_3" android:textColor="#FF0000" style="@style/appTitle"/>
+        </LinearLayout>
         <Button
                 android:text="play"
                 android:id="@+id/playButton"
                 android:onClick="play" style="@style/menuButton"/>
         <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/board_size_options" android:layout_gravity="center" android:prompt="@string/choose_board_size"
-                android:spinnerMode="dialog" android:background="#000000"/>
+                android:id="@+id/board_size_options" android:prompt="@string/choose_board_size"
+                style="@style/menuSpinner"/>
         <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/opponent_options" android:layout_gravity="center" android:prompt="@string/choose_opponent"
-                android:spinnerMode="dialog" android:background="#000000"/>
+                android:id="@+id/opponent_options" android:prompt="@string/choose_opponent"
+                style="@style/menuSpinner"/>
         <Button
                 android:text="settings"
                 android:id="@+id/settingsButton"

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dots &amp; Squares</string>
+    <string name="app_name_part_1">"Dots "</string>
+    <string name="app_name_part_2">"&amp; "</string>
+    <string name="app_name_part_3">Squares</string>
     <string name="choose_board_size">Choose board size</string>
     <string name="confirm_end_game">Are you sure to end the game?</string>
     <string name="confirm_restart">Are you sure to restart the game?</string>
