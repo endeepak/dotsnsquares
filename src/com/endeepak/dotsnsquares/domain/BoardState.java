@@ -3,16 +3,20 @@ package com.endeepak.dotsnsquares.domain;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class BoardState implements Serializable, Cloneable {
+public class BoardState implements Serializable {
     private final boolean[] completedLines;
     private final int boardSize;
     //TODO: Remove the below fields from here
     private SquareMatrix squareMatrix;
 
     public BoardState(int boardSize, SquareMatrix squareMatrix) {
+        this(boardSize, squareMatrix, new boolean[2 * boardSize * (boardSize + 1)]);
+    }
+
+    public BoardState(int boardSize, SquareMatrix squareMatrix, boolean[] completedLines) {
         this.boardSize = boardSize;
         this.squareMatrix = squareMatrix;
-        this.completedLines = new boolean[2 * this.boardSize * (this.boardSize + 1)];
+        this.completedLines = completedLines;
     }
 
     public Square getFirstCompletableSquare() {
@@ -24,6 +28,22 @@ public class BoardState implements Serializable, Cloneable {
             }
         }
         return null;
+    }
+
+    public ArrayList<Square> getCompletedSquares() {
+        ArrayList<Square> completedSquares = new ArrayList<Square>();
+        for (int row = 0; row < boardSize; row++) {
+            for (int column = 0; column < boardSize; column++) {
+                Square square = getSquare(row, column);
+                if(square.isComplete())
+                    completedSquares.add(square);
+            }
+        }
+        return completedSquares;
+    }
+
+    public int getCompletedSquaresCount() {
+        return getCompletedSquares().size();
     }
 
     public ArrayList<Square> getInCompletableSquares() {
@@ -52,11 +72,7 @@ public class BoardState implements Serializable, Cloneable {
 
 
     public BoardState getClone() {
-        try {
-            return (BoardState) super.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        return new BoardState(boardSize, squareMatrix, completedLines.clone());
     }
 
     public boolean isLineCompleted(int lineIndex) {
@@ -92,5 +108,10 @@ public class BoardState implements Serializable, Cloneable {
                 remainingLineIndexes.add(getLine(lineIndex));
         }
         return remainingLineIndexes;
+    }
+
+    public void markLineCompleted(Line line) {
+        int lineIndex = squareMatrix.getIndex(line);
+        markLineCompleted(lineIndex);
     }
 }

@@ -1,6 +1,7 @@
 package com.endeepak.dotsnsquares.domain;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class SquareMatrix implements Serializable {
     private int size;
@@ -39,5 +40,9 @@ public class SquareMatrix implements Serializable {
 
     public Line getLine(int lineIndex) {
         return lines[lineIndex];
+    }
+
+    public int getIndex(Line line) {
+        return Arrays.asList(lines).indexOf(line);
     }
 }

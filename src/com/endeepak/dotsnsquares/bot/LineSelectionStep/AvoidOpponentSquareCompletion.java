@@ -1,5 +1,6 @@
-package com.endeepak.dotsnsquares.bot;
+package com.endeepak.dotsnsquares.bot.LineSelectionStep;
 
+import com.endeepak.dotsnsquares.bot.LineSelectionStrategy;
 import com.endeepak.dotsnsquares.domain.BoardState;
 import com.endeepak.dotsnsquares.domain.Line;
 import com.endeepak.dotsnsquares.domain.RandomArrayElementSelector;
@@ -8,7 +9,7 @@ import com.endeepak.dotsnsquares.exception.NoMoreLinesAvailableException;
 
 import java.util.ArrayList;
 
-public class AvoidGivingCompletableLineSelectionStrategy implements LineSelectionStrategy {
+public class AvoidOpponentSquareCompletion implements LineSelectionStrategy {
 
     @Override
     public Line getLine(BoardState boardState) {
@@ -17,18 +18,7 @@ public class AvoidGivingCompletableLineSelectionStrategy implements LineSelectio
         ArrayList<Integer> safeLineIndices = new ArrayList<Integer>();
         safeLineIndices.addAll(lineIndicesFromInCompletableSquares);
         safeLineIndices.removeAll(lineIndicesOpponentCompletableSquare);
-        if(safeLineIndices.size() > 0) {
-            return boardState.getLine(getRandomLineIndex(safeLineIndices));
-        }
-
-        if(lineIndicesOpponentCompletableSquare.size() > 0) {
-            return boardState.getLine(getRandomLineIndex(lineIndicesOpponentCompletableSquare));
-        }
-        throw new NoMoreLinesAvailableException();
-    }
-
-    private Integer getRandomLineIndex(ArrayList<Integer> lineIndices) {
-        return new RandomArrayElementSelector().getNext(lineIndices);
+        return safeLineIndices.size() > 0 ? boardState.getLine(new RandomArrayElementSelector().getNext(safeLineIndices)) : null;
     }
 
     private ArrayList<Integer> getIncompleteLineIndices(ArrayList<Square> squares) {

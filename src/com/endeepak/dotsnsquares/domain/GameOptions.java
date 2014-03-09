@@ -4,8 +4,6 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import com.endeepak.dotsnsquares.BoardView;
 import com.endeepak.dotsnsquares.R;
-import com.endeepak.dotsnsquares.bot.AvoidGivingCompletableLineSelectionStrategy;
-import com.endeepak.dotsnsquares.bot.BruteForceLineSelectionStrategy;
 import com.endeepak.dotsnsquares.bot.LineSelectionStrategy;
 import com.endeepak.dotsnsquares.bot.LineSelectionStrategyFactory;
 
@@ -58,9 +56,11 @@ public class GameOptions implements Serializable {
 
     private Player getPlayer2(Board board, BoardView boardView) {
         if(opponent == Opponent.EasyBot)
-            return getBotPlayer("EasyBot", LineSelectionStrategyFactory.easy(), board, boardView);
+            return getBotPlayer(opponent.name(), LineSelectionStrategyFactory.easy(), board, boardView);
         if(opponent == Opponent.NormalBot)
-            return getBotPlayer("NormalBot", LineSelectionStrategyFactory.normal(), board, boardView);
+            return getBotPlayer(opponent.name(), LineSelectionStrategyFactory.normal(), board, boardView);
+        if(opponent == Opponent.HardBot)
+            return getBotPlayer(opponent.name(), LineSelectionStrategyFactory.hard(), board, boardView);
         else
             return new HumanPlayer(getPlayer2Name(), player2Color, board, boardView);
     }
@@ -142,19 +142,26 @@ public class GameOptions implements Serializable {
     }
 
     public enum Opponent {
-        HumanOnSameDevice("human"),
-        EasyBot("bot (easy)"),
-        NormalBot("bot (normal)");
+        HumanOnSameDevice("human", false),
+        EasyBot("bot (easy)", true),
+        NormalBot("bot (normal)", true),
+        HardBot("bot (hard)", true);
 
         private String title;
+        private boolean bot;
 
-        Opponent(String title) {
+        Opponent(String title, boolean isBot) {
             this.title = title;
+            bot = isBot;
         }
 
         @Override
         public String toString() {
             return title;
+        }
+
+        public boolean isBot() {
+            return bot;
         }
     }
 
