@@ -91,8 +91,7 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
     }
 
     private void makeCurrentPlayerPlay() {
-        BoardState boardState = new BoardState(board.isLinesCompleted.clone(), board.getSquareMatrix(), board.getSquares());
-        getCurrentPlayer().play(boardState);
+        getCurrentPlayer().play(board.getState());
         board.addLineDrawingListener(this);
     }
 

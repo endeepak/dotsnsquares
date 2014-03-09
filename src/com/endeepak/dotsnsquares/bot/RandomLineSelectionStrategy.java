@@ -13,19 +13,6 @@ public class RandomLineSelectionStrategy implements LineSelectionStrategy {
 
     @Override
     public Line getLine(BoardState boardState) {
-        boolean[] completedLines = boardState.getCompletedLines();
-        ArrayList<Integer> remainingLineIndexes = getRemainingLineIndexes(completedLines);
-        if (remainingLineIndexes.isEmpty()) throw new NoMoreLinesAvailableException();
-        Integer lineIndex = randomArrayElementSelector.getNext(remainingLineIndexes);
-        return boardState.getSquareMatrix().getLine(lineIndex);
-    }
-
-    private ArrayList<Integer> getRemainingLineIndexes(boolean[] completedLines) {
-        ArrayList<Integer> remainingLineIndexes = new ArrayList<Integer>();
-        for (int lineIndex = 0; lineIndex < completedLines.length; lineIndex++) {
-            if (!completedLines[lineIndex])
-                remainingLineIndexes.add(lineIndex);
-        }
-        return remainingLineIndexes;
+        return randomArrayElementSelector.getNext(boardState.getInCompleteLines());
     }
 }

@@ -19,19 +19,17 @@ public class Board implements Serializable {
     private final int dotMargin;
     transient public LineDrawing lineDrawing = new LineDrawing();
     public final Dot[][] dots;
-    final boolean[] isLinesCompleted;
     public final SquareOwner[][] squareOwners;
-    public final Square[][] squares;
     private final ArrayList<LineDrawnEventListener> lineDrawingListeners = new ArrayList<LineDrawnEventListener>();
     private int numberOfSquaresCompleted = 0;
     private int numberOfLinesCompleted = 0;
     private int currentSquareFillColor;
     private int numberOfSquares;
     private SquareMatrix squareMatrix;
+    private BoardState boardState;
 
     public Board(int boardSize, int boardWidth) {
         this.boardSize = boardSize;
-        this.squareMatrix = new SquareMatrix(boardSize);
         dotRadius = boardWidth / (boardSize * 6);
         lineThickness = dotRadius;
         dotDiameter = 2 * dotRadius;
@@ -41,19 +39,10 @@ public class Board implements Serializable {
         numberOfDotColumns = this.boardSize + 1;
         numberOfSquares = this.boardSize * this.boardSize;
         dots = new Dot[numberOfDotRows][numberOfDotColumns];
-        isLinesCompleted = new boolean[2 * this.boardSize * (this.boardSize + 1)];
+        squareMatrix = new SquareMatrix(boardSize);
         squareOwners = new SquareOwner[this.boardSize][this.boardSize];
-        squares = new Square[this.boardSize][this.boardSize];
+        boardState = new BoardState(boardSize, squareMatrix);
         initialiseDots();
-        initialiseSquares();
-    }
-
-    private void initialiseSquares() {
-        for (int row = 0; row < boardSize; row++) {
-            for (int column = 0; column < boardSize; column++) {
-                squares[row][column] = getSquare(row, column);
-            }
-        }
     }
 
     public void updateLineDrawingPosition(float x, float y, boolean aimForCenterOfDot) {
@@ -71,7 +60,7 @@ public class Board implements Serializable {
             Dot endDot = lineDrawing.getEndDot();
             Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
             int lineIndex = getLineIndex(linePath, lowerDot);
-            if(isLinesCompleted[lineIndex]) return;
+            if(boardState.isLineCompleted(lineIndex)) return;
             lineDrawing.reset();
             publishLineDrawnEvent(new LineDrawnEvent(new Line(startingDot.getPosition(), endDot.getPosition())));
         }
@@ -87,8 +76,8 @@ public class Board implements Serializable {
         LinePath linePath = LinePath.create(startingDot.getPoint(), endDot.getPoint());
         Dot lowerDot = linePath.getDirectionType() == LinePath.DirectionType.Forward ? startingDot : endDot;
         int lineIndex = getLineIndex(linePath, lowerDot);
-        if(isLinesCompleted[lineIndex]) throw new AlreadyDrawnLineException();
-        isLinesCompleted[lineIndex] = true;
+        if(boardState.isLineCompleted(lineIndex)) throw new AlreadyDrawnLineException();
+        boardState.markLineCompleted(lineIndex);
         numberOfLinesCompleted++;
         completedLinesPath.moveTo(startingDot.x, startingDot.y);
         completedLinesPath.lineTo(endDot.x, endDot.y);
@@ -137,26 +126,10 @@ public class Board implements Serializable {
 
     void checkAndMarkSquareCompletion(int row, int column) {
         if(squareOwners[row][column] != null) return;
-        Square square = getSquare(row, column);
-        squares[row][column] = square;
-        if (square.isComplete()) {
+        if (boardState.getSquare(row, column).isComplete()) {
             squareOwners[row][column] = new SquareOwner(currentSquareFillColor);
             numberOfSquaresCompleted++;
         }
-    }
-
-    private Square getSquare(int row, int column) {
-        int firstLineIndex = row * (2 * boardSize + 1) + column;
-        int[] allLineIndices = new int[] {firstLineIndex, firstLineIndex + boardSize, firstLineIndex + boardSize + 1, firstLineIndex + 2 * boardSize + 1};
-        ArrayList<Integer> completedLineIndices = new ArrayList<Integer>();
-        ArrayList<Integer> inCompleteLineIndices = new ArrayList<Integer>();
-        for (int lineIndex : allLineIndices) {
-            if(isLinesCompleted[lineIndex])
-                completedLineIndices.add(lineIndex);
-            else
-                inCompleteLineIndices.add(lineIndex);
-        }
-        return new Square(completedLineIndices, inCompleteLineIndices);
     }
 
     Dot getDotForCoordinates(float x, float y) {
@@ -217,24 +190,16 @@ public class Board implements Serializable {
         return numberOfLinesCompleted;
     }
 
-    public int getBoardSize() {
-        return boardSize;
-    }
-
     public void removeLineDrawingListener(LineDrawnEventListener lineDrawnEventListener) {
         lineDrawingListeners.remove(lineDrawnEventListener);
     }
 
-    public SquareMatrix getSquareMatrix() {
-        return squareMatrix;
-    }
-
-    public Square[][] getSquares() {
-        return squares;
-    }
-
     public Dot getDot(DotPosition startingDotPosition) {
         return dots[startingDotPosition.getRow()][startingDotPosition.getColumn()];
+    }
+
+    public BoardState getState() {
+        return boardState.getClone();
     }
 
     public static class LineDrawnEvent {

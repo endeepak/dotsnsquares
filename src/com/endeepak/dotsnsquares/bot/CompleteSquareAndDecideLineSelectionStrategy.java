@@ -14,10 +14,9 @@ public class CompleteSquareAndDecideLineSelectionStrategy implements LineSelecti
 
     @Override
     public Line getLine(BoardState boardState) {
-        SquareMatrix squareMatrix = boardState.getSquareMatrix();
         Square firstCompletableSquare = boardState.getFirstCompletableSquare();
         if(firstCompletableSquare != null) {
-            return squareMatrix.getLine(firstCompletableSquare.getInCompleteLineIndices().get(0));
+            return boardState.getLine(firstCompletableSquare.getInCompleteLineIndices().get(0));
         }
 
         return nextLineDeciderStrategy.getLine(boardState);
