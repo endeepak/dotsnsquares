@@ -1,11 +1,8 @@
 Backlog
 -------
-* Connect dots when not started from actual dot
-* Finish end dot when it touches the circumference
-* Color choice for players with headers for players
-* Back navigation on settings with header?
-* Score board styling and design
-* Gesture to start & options
+* Fonts and colors
+* Earlier Android?
+* Time trial mode vs bot
 * Two players over blue tooth
 * Two players on same network
 * Two players on internet
@@ -35,3 +32,9 @@ Done
 * Release on google play!
     * Logo for the app
 * Release updated version
+* Connect dots when not started from actual dot
+* Finish end dot when it touches the circumference
+* Color choice for players with headers for players
+* Back navigation on settings with header? No
+* Score board styling and design
+* Gesture to start & options. No
