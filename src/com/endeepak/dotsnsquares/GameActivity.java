@@ -6,9 +6,11 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.endeepak.dotsnsquares.domain.Board;
 import com.endeepak.dotsnsquares.domain.Game;
 import com.endeepak.dotsnsquares.domain.GameOptions;
@@ -49,16 +51,22 @@ public class GameActivity extends Activity implements Game.PlayerChangedEventLis
 
     public void restartGame(View view) {
         if(game.canBeInterrupted()) {
-            startNewGame();
+            restartGameWithoutPrompt();
         } else {
             ConfirmationDialog.show(this, getString(R.string.confirm_restart), new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                startNewGame();
+                restartGameWithoutPrompt();
                 }
             });
         }
     }
+
+    public void restartGameWithoutPrompt() {
+        startNewGame();
+        Toast.makeText(this, R.string.restarted_message, Toast.LENGTH_SHORT).show();
+    }
+
 
     private void startNewGame() {
         Board board = new Board(gameOptions.getBoardSize().getSize(), screenWidth);
