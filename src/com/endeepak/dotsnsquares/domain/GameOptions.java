@@ -61,6 +61,8 @@ public class GameOptions implements Serializable {
             return getBotPlayer(opponent.name(), LineSelectionStrategyFactory.normal(), board, boardView);
         if(opponent == Opponent.HardBot)
             return getBotPlayer(opponent.name(), LineSelectionStrategyFactory.hard(), board, boardView);
+        if(opponent == Opponent.ProBot)
+            return getBotPlayer(opponent.name(), LineSelectionStrategyFactory.pro(), board, boardView);
         else
             return new HumanPlayer(getPlayer2Name(), player2Color, board, boardView);
     }
@@ -145,7 +147,8 @@ public class GameOptions implements Serializable {
         HumanOnSameDevice("human", false),
         EasyBot("bot (easy)", true),
         NormalBot("bot (normal)", true),
-        HardBot("bot (hard)", true);
+        HardBot("bot (hard)", true),
+        ProBot("bot (pro)", true);
 
         private String title;
         private boolean bot;

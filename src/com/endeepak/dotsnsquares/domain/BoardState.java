@@ -30,6 +30,11 @@ public class BoardState implements Serializable {
         return null;
     }
 
+    public Line getFirstSquareCompletableLine() {
+        Square firstCompletableSquare = getFirstCompletableSquare();
+        return firstCompletableSquare != null ? getLine(firstCompletableSquare.getInCompleteLineIndices().get(0)) : null;
+    }
+
     public ArrayList<Square> getCompletedSquares() {
         ArrayList<Square> completedSquares = new ArrayList<Square>();
         for (int row = 0; row < boardSize; row++) {

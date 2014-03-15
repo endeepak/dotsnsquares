@@ -4,12 +4,14 @@ import com.endeepak.dotsnsquares.bot.LineSelectionStep.AvoidOpponentSquareComple
 import com.endeepak.dotsnsquares.bot.LineSelectionStep.FirstAvailableLineSelection;
 import com.endeepak.dotsnsquares.bot.LineSelectionStep.ProvideLineFromMinimumSquaresBlock;
 import com.endeepak.dotsnsquares.bot.LineSelectionStep.RandomLineSelection;
+import com.endeepak.dotsnsquares.bot.LineSelectionStep.ThinkTwoStepsAheadToGiveMinimumBlock;
 import com.endeepak.dotsnsquares.bot.LineSelectionStep.TrySquareCompletion;
 
 public class LineSelectionStrategyFactory {
 
     public static LineSelectionStrategy easy() {
-        return new RandomStrategySelectorStrategy(new StepWiseLineSelectionStrategy(new TrySquareCompletion(), new RandomLineSelection()), new FirstAvailableLineSelection());
+        StepWiseLineSelectionStrategy completeSquareOrGiveRandomLine = new StepWiseLineSelectionStrategy(new TrySquareCompletion(), new RandomLineSelection());
+        return new RandomStrategySelectorStrategy(completeSquareOrGiveRandomLine, new FirstAvailableLineSelection());
     }
 
     public static LineSelectionStrategy normal() {
@@ -18,5 +20,9 @@ public class LineSelectionStrategyFactory {
 
     public static LineSelectionStrategy hard() {
         return new StepWiseLineSelectionStrategy(new TrySquareCompletion(), new AvoidOpponentSquareCompletion(), new ProvideLineFromMinimumSquaresBlock());
+    }
+
+    public static LineSelectionStrategy pro() {
+        return new ThinkTwoStepsAheadToGiveMinimumBlock();
     }
 }
