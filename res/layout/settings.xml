@@ -9,6 +9,11 @@
                 android:title="@string/drawing_color"
                 android:defaultValue="@color/foreground_default"
                 />
+        <ListPreference
+                android:id="@+id/player_turn_options"
+                android:key="@string/player_turn_preference_key"
+                android:summary="@string/player_turn"
+                android:dialogTitle="@string/player_turn_question"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/player1_details">
         <EditTextPreference

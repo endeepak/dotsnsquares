@@ -1,6 +1,5 @@
 Backlog
 -------
-* Fonts and colors
 * Earlier Android?
 * Time trial mode vs bot
 * Two players over blue tooth
@@ -38,3 +37,4 @@ Done
 * Back navigation on settings with header? No
 * Score board styling and design
 * Gesture to start & options. No
+* Fonts and colors

@@ -28,6 +28,8 @@
     <string name="bot">Bot</string>
     <string name="game">Game</string>
     <string name="drawing_color">Drawing Color</string>
+    <string name="player_turn">Plays first</string>
+    <string name="player_turn_question">Who plays first?</string>
 
     <!-- Preference Keys -->
     <string name="player1_name_preference_key">player1_name</string>
@@ -38,4 +40,5 @@
     <string name="opponent_preference_key">opponent</string>
     <string name="bot_drawing_speed_preference_key">bot_drawing_speed</string>
     <string name="foreground_color_preference_key">foreground_color</string>
+    <string name="player_turn_preference_key">player_turn</string>
 </resources>

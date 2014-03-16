@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import com.endeepak.dotsnsquares.domain.BoardSize;
 import com.endeepak.dotsnsquares.domain.GameOptions;
+import com.endeepak.dotsnsquares.domain.Opponent;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +21,7 @@ import java.util.List;
 public class MainMenuActivity extends Activity {
     public static final int PREFERENCES = 1;
     private final ArrayList<BoardSize> boardSizes = BoardSize.fromSizes(3, 4, 5, 6);
-    private final List<GameOptions.Opponent> opponents = Arrays.asList(GameOptions.Opponent.values());
+    private final List<Opponent> opponents = Arrays.asList(Opponent.values());
     private GameOptions gameOptions;
     private Spinner opponentsSinner;
     private Spinner boardSizeSpinner;
@@ -47,7 +48,7 @@ public class MainMenuActivity extends Activity {
     }
 
     private void configureOpponentOptions() {
-        ArrayAdapter adapter = new ArrayAdapter<GameOptions.Opponent>(this, R.layout.opponent_selected_menu_option, android.R.id.text1, opponents);
+        ArrayAdapter adapter = new ArrayAdapter<Opponent>(this, R.layout.opponent_selected_menu_option, android.R.id.text1, opponents);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         opponentsSinner.setAdapter(adapter);
         opponentsSinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

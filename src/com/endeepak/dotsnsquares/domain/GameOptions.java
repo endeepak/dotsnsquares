@@ -8,7 +8,6 @@ import com.endeepak.dotsnsquares.bot.LineSelectionStrategy;
 import com.endeepak.dotsnsquares.bot.LineSelectionStrategyFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +19,7 @@ public class GameOptions implements Serializable {
     private int player2Color;
     private Opponent opponent;
     private BotDrawingSpeed botDrawingSpeed;
+    private PlayerTurn playerTurn;
     private int foregroundColor;
 
     public void setBoardSize(BoardSize boardSize) {
@@ -89,6 +89,7 @@ public class GameOptions implements Serializable {
         edit.putInt(resources.getString(R.string.board_size_preference_key), boardSize.getSize());
         edit.putString(resources.getString(R.string.opponent_preference_key), opponent.name());
         edit.putString(resources.getString(R.string.bot_drawing_speed_preference_key), botDrawingSpeed.name());
+        edit.putString(resources.getString(R.string.player_turn_preference_key), playerTurn.name());
         edit.commit();
     }
 
@@ -102,6 +103,7 @@ public class GameOptions implements Serializable {
         gameOptions.setBoardSize(new BoardSize(preferences.getInt(resources.getString(R.string.board_size_preference_key), Defaults.BOARD_SIZE)));
         gameOptions.setOpponent(Opponent.valueOf(preferences.getString(resources.getString(R.string.opponent_preference_key), Defaults.OPPONENT.name())));
         gameOptions.setBotDrawingSpeed(BotDrawingSpeed.valueOf(preferences.getString(resources.getString(R.string.bot_drawing_speed_preference_key), Defaults.BOT_DRAWING_SPEED.name())));
+        gameOptions.setPlayerTurn(PlayerTurn.valueOf(preferences.getString(resources.getString(R.string.player_turn_preference_key), Defaults.PLAYER_TURN.name())));
         return gameOptions;
     }
 
@@ -135,62 +137,20 @@ public class GameOptions implements Serializable {
         return foregroundColor;
     }
 
+    public int getFirstPlayerIndex() {
+        return playerTurn.getPlayerIndex();
+    }
+
+    public void setPlayerTurn(PlayerTurn playerTurn) {
+        this.playerTurn = playerTurn;
+    }
+
     public static class Defaults {
         public static final String PLAYER1_NAME = "Player 1";
         public static final String PLAYER2_NAME = "Player 2";
         public static final int BOARD_SIZE = 3;
         public static final Opponent OPPONENT = Opponent.NormalBot;
         public static final BotDrawingSpeed BOT_DRAWING_SPEED = BotDrawingSpeed.Normal;
-    }
-
-    public enum Opponent {
-        HumanOnSameDevice("human", false),
-        EasyBot("bot (easy)", true),
-        NormalBot("bot (normal)", true),
-        HardBot("bot (hard)", true),
-        ProBot("bot (pro)", true);
-
-        private String title;
-        private boolean bot;
-
-        Opponent(String title, boolean isBot) {
-            this.title = title;
-            bot = isBot;
-        }
-
-        @Override
-        public String toString() {
-            return title;
-        }
-
-        public boolean isBot() {
-            return bot;
-        }
-    }
-
-    public enum BotDrawingSpeed {
-        Slow(2000),
-        Normal(1000),
-        Fast(500),
-        Bolt(1);
-
-        private int animationTime;
-
-        BotDrawingSpeed(int animationTime) {
-            this.animationTime = animationTime;
-        }
-
-        public int getAnimationTime() {
-            return animationTime;
-        }
-
-        public static String[] getNameValues() {
-            GameOptions.BotDrawingSpeed[] botDrawingSpeeds = GameOptions.BotDrawingSpeed.values();
-            ArrayList<String> values = new ArrayList<String>();
-            for (GameOptions.BotDrawingSpeed botDrawingSpeed : botDrawingSpeeds) {
-                values.add(botDrawingSpeed.name());
-            }
-            return values.toArray(new String[values.size()]);
-        }
+        public static final PlayerTurn PLAYER_TURN = PlayerTurn.Player1First;
     }
 }

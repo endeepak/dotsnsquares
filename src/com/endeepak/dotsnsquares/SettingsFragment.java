@@ -1,6 +1,5 @@
 package com.endeepak.dotsnsquares;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,6 +7,9 @@ import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import com.endeepak.dotsnsquares.domain.BotDrawingSpeed;
+import com.endeepak.dotsnsquares.domain.PlayerTurn;
+import com.endeepak.dotsnsquares.util.EnumUtil;
 import com.endeepak.dotsnsquares.domain.GameOptions;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -17,7 +19,8 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.layout.settings);
         bindPreferences();
-        configureBotDrawingSpeed();
+        configureListPreference(R.string.bot_drawing_speed_preference_key, EnumUtil.getNames(BotDrawingSpeed.class), EnumUtil.getNames(BotDrawingSpeed.class));
+        configureListPreference(R.string.player_turn_preference_key, EnumUtil.getStrings(PlayerTurn.class), EnumUtil.getNames(PlayerTurn.class));
         configureResetSettings();
     }
 
@@ -46,10 +49,10 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         getActivity().startActivity(getActivity().getIntent());
     }
 
-    private void configureBotDrawingSpeed() {
-        ListPreference botDrawingSpeed = (ListPreference) findPreference(getResources().getString(R.string.bot_drawing_speed_preference_key));
-        botDrawingSpeed.setEntries(GameOptions.BotDrawingSpeed.getNameValues());
-        botDrawingSpeed.setEntryValues(GameOptions.BotDrawingSpeed.getNameValues());
+    private void configureListPreference(int preferenceKey, String[] entries, String[] entryValues) {
+        ListPreference listPreference = (ListPreference) findPreference(getResources().getString(preferenceKey));
+        listPreference.setEntries(entries);
+        listPreference.setEntryValues(entryValues);
     }
 
     private void bindPreferences() {
@@ -73,7 +76,12 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         }
         else if (pref instanceof ListPreference) {
             ListPreference listPreference = (ListPreference) pref;
-            pref.setTitle(listPreference.getValue());
+            String value = listPreference.getValue();
+            if(key.equals(getResources().getString(R.string.player_turn_preference_key))) {
+                pref.setTitle(EnumUtil.valueOrDefault(value, GameOptions.Defaults.PLAYER_TURN).toString());
+            } else {
+                pref.setTitle(value);
+            }
         }
     }
 

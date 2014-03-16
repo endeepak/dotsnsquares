@@ -33,7 +33,7 @@ public class MainMenuActivityTest extends ActivityInstrumentationTestCase2<MainM
     public void testSerializingGame() throws Exception {
         Board board = new Board(1, 1);
         HumanPlayer humanPlayer = new HumanPlayer("", 1, board, null);
-        new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new Game(board, Arrays.<Player>asList(humanPlayer)));
+        new ObjectOutputStream(new ByteArrayOutputStream()).writeObject(new Game(board, Arrays.<Player>asList(humanPlayer), gameOptions.getFirstPlayerIndex()));
     }
 
     public void testBoardStateClone() throws Exception {

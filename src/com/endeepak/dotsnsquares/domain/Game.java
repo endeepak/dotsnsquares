@@ -15,11 +15,11 @@ public class Game implements Serializable, Board.LineDrawnEventListener {
     private int currentPlayerIndex;
     private final ScoreCard scoreCard;
 
-    public Game(Board board, List<Player> players) {
+    public Game(Board board, List<Player> players, int firstPlayerIndex) {
         this.board = board;
         this.players = players;
         numberOfPlayers = players.size();
-        currentPlayerIndex = 0;
+        currentPlayerIndex = firstPlayerIndex;
         scoreCard = new ScoreCard(players);
     }
 

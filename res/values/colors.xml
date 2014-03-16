@@ -3,7 +3,7 @@
     <color name="background_color">#000000</color>
     <color name="menu_text_color">#FFFFFF</color>
     <color name="player_1_default">#008600</color>
-    <color name="player_2_default">#FB0300</color>
-    <color name="foreground_default">#0001FC</color>
+    <color name="player_2_default">#E50000</color>
+    <color name="foreground_default">#0000E5</color>
     <color name="menu_text_focus_color">@color/foreground_default</color>
 </resources>

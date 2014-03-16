@@ -8,11 +8,11 @@ public class BotPlayer implements Player {
     private final LineSelectionStrategy lineSelectionStrategy;
     private final Board board;
     transient private final BoardView boardView;
-    private GameOptions.BotDrawingSpeed botDrawingSpeed;
+    private BotDrawingSpeed botDrawingSpeed;
     private String name;
     private int color;
 
-    public BotPlayer(String name, int color, LineSelectionStrategy lineSelectionStrategy, Board board, BoardView boardView, GameOptions.BotDrawingSpeed botDrawingSpeed) {
+    public BotPlayer(String name, int color, LineSelectionStrategy lineSelectionStrategy, Board board, BoardView boardView, BotDrawingSpeed botDrawingSpeed) {
         this.name = name;
         this.color = color;
         this.lineSelectionStrategy = lineSelectionStrategy;
