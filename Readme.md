@@ -1,4 +1,4 @@
-![Logo](./res/drawable-hdpi/ic_launcher.png "Dots & Squares")
+![Logo](./res/drawable-hdpi/ic_launcher.png "Dots & Squares") [![Android app on Google Play](https://developer.android.com/images/brand/en_app_rgb_wo_60.png "Android app on Google Play")](https://play.google.com/store/apps/details?id=com.endeepak.dotsnsquares)
 
 Dots & Squares
 ==============
@@ -6,10 +6,6 @@ A simple fun game with two simple rules
 
 * Two players take turn to connect the dots.
 * Complete a square to score a point and play again.
-
-Install
--------
-[https://play.google.com/store/apps/details?id=com.endeepak.dotsnsquares](https://play.google.com/store/apps/details?id=com.endeepak.dotsnsquares)
 
 Map for dots, lines and squares position
 ----------------------------------------
